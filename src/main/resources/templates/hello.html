@@ -6,8 +6,18 @@
 </head>
 <body>
 <h1 th:inline="text">Hello <span th:remove="tag" sec:authentication="name">thymeleaf</span>!</h1>
-<form th:action="@{/logout}" method="post">
-    <input type="submit" value="Sign Out"/>
-</form>
+<div>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Sign Out"/>
+    </form>
+</div>
+<div>
+    <a href="/diary">Показать мой дневник</a>
+    <a href="/recipes">Показать мои рецепты</a>
+    <a href="/products/my">Показать мои продукты</a>
+</div>
+<div>
+    <a href="/products/all">Показать все продукты</a>
+</div>
 </body>
 </html>
