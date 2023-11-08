@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -18,8 +19,9 @@ import javax.sql.DataSource;
 public class SecurityConfig {
 
     @Autowired
-    private final DataSource dataSource;
+    private final DataSource dataSource; //TODO удалить
 
+    //TODO удалить
     public SecurityConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -28,13 +30,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home").permitAll()
+                        .requestMatchers("/", "/home", "/registration").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login")
                         .permitAll()
                 )
+                .csrf(AbstractHttpConfigurer::disable)
                 .logout((logout) -> logout.permitAll());
 
         return http.build();
@@ -42,13 +45,13 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsManager users(DataSource dataSource) {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .authorities("USER")
-                .build();
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("user")
+//                .password("password")
+//                .authorities("USER")
+//                .build();
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
-        users.createUser(user);
+//        users.createUser(user);
         return users;
     }
 }
