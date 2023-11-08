@@ -8,6 +8,7 @@ public class MyCaloriesApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MyCaloriesApplication.class, args);
+		System.out.println("Успешный запуск");
 	}
 
 }
