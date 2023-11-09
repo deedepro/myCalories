@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductsRepository extends CrudRepository<Products, Long> {
     Products findTopByOrderByIdDesc();
 
+    Iterable<Products> findAllByUser(Users user);
+
     boolean existsByNameAndBrandAndUser(String name, String brand, Users User);
 }

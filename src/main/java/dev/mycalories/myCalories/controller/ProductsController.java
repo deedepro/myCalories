@@ -1,5 +1,6 @@
 package dev.mycalories.myCalories.controller;
 
+import dev.mycalories.myCalories.dto.ProductView;
 import dev.mycalories.myCalories.entity.Products;
 import dev.mycalories.myCalories.service.EnergyService;
 import dev.mycalories.myCalories.service.ProductsService;
@@ -9,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller
 public class ProductsController {
@@ -21,11 +24,15 @@ public class ProductsController {
 
     @GetMapping("/products/all")
     String showAllProductsPage(Model model) {
+        List<ProductView> allProducts = productsService.collectAllProducts();
+        model.addAttribute("products", allProducts);
         return "products/all_products";
     }
 
     @GetMapping("/products/my")
     String showMyProductsPage(Model model){
+        List<ProductView> myProducts = productsService.collectMyProducts();
+        model.addAttribute("products", myProducts);
         return "products/my_products";
     }
 

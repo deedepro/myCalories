@@ -6,6 +6,16 @@
 </head>
 <body>
 <h1 th:inline="text">Продукты, добавленные <span th:remove="tag" sec:authentication="name">thymeleaf</span></h1>
+<!--Выдаем из БД-->
+<div th:each="el : ${products}">
+    <h3 th:text="${el.getName()} + ' от ' + ${el.getBrand()} + '. Ккал: ' + ${el.getKkal()}"></h3>
+    <p th:text="'Пищевая ценность в 100г продукта: белков - ' + ${el.getProtein()} + ' г; '
+         + 'жиров - ' + ${el.getFat()} + ' г; '
+         + 'углеводов - : ' + ${el.getCarb()} + ' г; '
+         + 'пищевых волокон - ' + ${el.getFibers()} + ' г.'"></p>
+    <a th:href="'/test/edit/' + ${el.getId()}">Редактировать</a>
+    <a th:href="'/test/delete/' + ${el.getId()}">Удалить</a><br><br>
+</div>
 <div>
     <a href="/products/add">Добавить продукт</a>
 </div>

@@ -28,6 +28,12 @@ public class EnergyServiceImpl implements EnergyService {
     }
 
     @Override
+    public EnergyValues findByProduct(Products product) {
+        Long productId = product.getId();
+        return energyRepository.findById(productId).orElse(null);
+    }
+
+    @Override
     public Double calcKilocalorie(EnergyValues energyValues) {
         Double kilocalorie = energyValues.getKilocalorie();
         if (kilocalorie != null) {

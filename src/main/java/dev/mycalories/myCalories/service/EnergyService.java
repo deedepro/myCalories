@@ -10,6 +10,8 @@ public interface EnergyService {
                     String carbohydrates,
                     String alimentaryFiber,
                     String kilocalorie);
+
+    EnergyValues findByProduct(Products product);
     Double calcKilocalorie(EnergyValues energyValues);
     Double nonNullParam(String param);
 }

@@ -1,7 +1,10 @@
 package dev.mycalories.myCalories.service;
 
+import dev.mycalories.myCalories.dto.ProductView;
 import dev.mycalories.myCalories.entity.Products;
 import dev.mycalories.myCalories.entity.Users;
+
+import java.util.List;
 
 public interface ProductsService {
     Products saveProduct(String name,
@@ -19,4 +22,8 @@ public interface ProductsService {
     void delProduct(Long id);
 
     boolean checkProductExist(String name, String brand, Users user);
+
+    List<ProductView> collectAllProducts();
+
+    List<ProductView> collectMyProducts();
 }

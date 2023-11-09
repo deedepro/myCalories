@@ -1,5 +1,7 @@
 package dev.mycalories.myCalories.service.impl;
 
+import dev.mycalories.myCalories.dto.ProductView;
+import dev.mycalories.myCalories.entity.EnergyValues;
 import dev.mycalories.myCalories.entity.Products;
 import dev.mycalories.myCalories.entity.Users;
 import dev.mycalories.myCalories.repository.ProductsRepository;
@@ -9,6 +11,10 @@ import dev.mycalories.myCalories.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -48,6 +54,42 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public boolean checkProductExist(String name, String brand, Users user) {
         return productsRepository.existsByNameAndBrandAndUser(name, brand, user);
+    }
+
+    @Override
+    public List<ProductView> collectAllProducts() {
+        Iterable<Products> allProducts = productsRepository.findAll();
+        return createProductViews(allProducts);
+    }
+
+    @Override
+    public List<ProductView> collectMyProducts() {
+        Users currentUser = registrationService.getCurrentUser();
+        Assert.isTrue(currentUser != null, "Не найден текущий пользователь");
+        Iterable<Products> allProducts = productsRepository.findAllByUser(currentUser);
+        return createProductViews(allProducts);
+    }
+
+    private List<ProductView> createProductViews(Iterable<Products> products){
+        Iterator<Products> iterator = products.iterator();
+        List<ProductView> result = new ArrayList<>();
+        while(iterator.hasNext()){
+            Products product = iterator.next();
+            ProductView productView = new ProductView(product.getId(), product.getName(),product.getBrand());
+            EnergyValues energyValue = energyService.findByProduct(product);
+            if(energyValue == null){
+                continue;
+            }
+            productView.setEnergyValues(
+                    energyValue.getProtein(),
+                    energyValue.getFat(),
+                    energyValue.getCarbohydrates(),
+                    energyValue.getAlimentaryFiber(),
+                    energyValue.getKilocalorie()
+            );
+            result.add(productView);
+        }
+        return result;
     }
 
     private Products makeProduct(String name, String brand, Users user) {
