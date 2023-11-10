@@ -10,14 +10,9 @@ public interface ProductsService {
     Product saveProduct(String name,
                         String brand);
 
-    void editProduct(Long id,
+    Product editProduct(Long id,
                      String name,
-                     String brand,
-                     Double protein,
-                     Double fat,
-                     Double carbohydrates,
-                     Double alimentaryFiber,
-                     Double kilocalorie);
+                     String brand);
 
     void delProduct(Long id);
 
@@ -26,4 +21,6 @@ public interface ProductsService {
     List<ProductView> collectAllProducts();
 
     List<ProductView> collectMyProducts();
+
+    ProductView makeProductView(Long productId);
 }

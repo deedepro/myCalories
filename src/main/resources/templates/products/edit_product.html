@@ -7,22 +7,22 @@
 <body>
 <h1>Edit product</h1>
 <p th:text="${message}">Сообщение</p>
-<form action="/products/edit" method="post">
+<form method="post">
     <label for="name">Название продукта</label>
-    <input required type="text" name="name" id="name"/>
+    <input th:value="${product.getName()}" required type="text" name="name" id="name"/>
     <label for="brand">Производителя</label>
-    <input required type="text" name="brand" id="brand"/>
+    <input th:value="${product.getBrand()}" required type="text" name="brand" id="brand"/>
     <label for="protein">Белки</label>
-    <input type="number" name="protein" id="protein"/>
+    <input th:value="${product.getProtein()}" type="number" step="0.01" name="protein" id="protein"/>
     <label for="fat">Жиры</label>
-    <input type="number" name="fat" id="fat"/>
+    <input th:value="${product.getFat()}" type="number" step="0.01" name="fat" id="fat"/>
     <label for="carbohydrates">Углеводы</label>
-    <input type="number" name="carbohydrates" id="carbohydrates"/>
+    <input th:value="${product.getCarb()}" type="number" step="0.01" name="carbohydrates" id="carbohydrates"/>
     <label for="alimentaryFiber">Пищевые волокна</label>
-    <input type="number" name="alimentaryFiber" id="alimentaryFiber"/>
+    <input th:value="${product.getFibers()}" type="number" step="0.01" name="alimentaryFiber" id="alimentaryFiber"/>
     <label for="kilocalorie">Ккал</label>
-    <input placeholder="Можно оставить пустым" type="number" name="kilocalorie" id="kilocalorie"/>
-    <input type="submit" value="Добавить продукт">
+    <input th:value="${product.getKkal()}" placeholder="Можно оставить пустым" type="number" step="0.01" name="kilocalorie" id="kilocalorie"/>
+    <input type="submit" value="Изменить продукт">
 </form>
 </body>
 </html>

@@ -13,8 +13,10 @@
          + 'жиров - ' + ${el.getFat()} + ' г; '
          + 'углеводов - : ' + ${el.getCarb()} + ' г; '
          + 'пищевых волокон - ' + ${el.getFibers()} + ' г.'"></p>
-    <a th:href="'/test/edit/' + ${el.getId()}">Редактировать</a>
-    <a th:href="'/test/delete/' + ${el.getId()}">Удалить</a><br><br>
+    <a th:href="'/products/edit/' + ${el.getId()}">Редактировать</a>
+    <form th:action="'/products/del/' + ${el.getId()}" method="post">
+        <button type="submit">Удалить</button>
+    </form><br><br>
 </div>
 <div>
     <a href="/products/add">Добавить продукт</a>

@@ -14,4 +14,13 @@ public interface EnergyService {
     EnergyValue findByProduct(Product product);
     Double calcKilocalorie(EnergyValue energyValue);
     Double nonNullParam(String param);
+
+    EnergyValue editEnergyValues(Product product,
+                          String protein,
+                          String fat,
+                          String carbohydrates,
+                          String alimentaryFiber,
+                          String kilocalorie);
+
+    void delEnergyValue(Product product);
 }

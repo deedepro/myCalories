@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class ProductsServiceImpl implements ProductsService {
@@ -42,13 +40,23 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public void editProduct(Long id, String name, String brand, Double protein, Double fat, Double carbohydrates, Double alimentaryFiber, Double kilocalorie) {
+    public Product editProduct(Long id, String name, String brand) {
+        Product product = productsRepository.findById(id).orElse(null);
+        if (Objects.nonNull(product)) {
+            product.setName(name);
+            product.setBrand(brand);
+            productsRepository.save(product);
+        }
+        return product;
 
     }
 
     @Override
     public void delProduct(Long id) {
-
+        Product product = productsRepository.findById(id).orElse(null);
+        if(Objects.nonNull(product)){
+            productsRepository.delete(product);
+        }
     }
 
     @Override
@@ -70,14 +78,20 @@ public class ProductsServiceImpl implements ProductsService {
         return createProductViews(allProducts);
     }
 
-    private List<ProductView> createProductViews(Iterable<Product> products){
+    @Override
+    public ProductView makeProductView(Long productId) {
+        Product product = productsRepository.findById(productId).orElse(null);
+        return createProductViews(Collections.singletonList(product)).stream().findFirst().orElse(null);
+    }
+
+    private List<ProductView> createProductViews(Iterable<Product> products) {
         Iterator<Product> iterator = products.iterator();
         List<ProductView> result = new ArrayList<>();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             Product product = iterator.next();
-            ProductView productView = new ProductView(product.getId(), product.getName(),product.getBrand());
+            ProductView productView = new ProductView(product.getId(), product.getName(), product.getBrand());
             EnergyValue energyValue = energyService.findByProduct(product);
-            if(energyValue == null){
+            if (energyValue == null) {
                 continue;
             }
             productView.setEnergyValues(

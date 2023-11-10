@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @AllArgsConstructor
@@ -17,9 +19,8 @@ public class EnergyValue {
     private Long id;
 
     @OneToOne
-//    @JoinColumn(name = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
-
     private Double protein;
     private Double fat;
     private Double carbohydrates;
