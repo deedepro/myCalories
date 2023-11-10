@@ -17,6 +17,10 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @MapsId
+    private EnergyValue energyValue;
     @ManyToOne
     private User user;
 

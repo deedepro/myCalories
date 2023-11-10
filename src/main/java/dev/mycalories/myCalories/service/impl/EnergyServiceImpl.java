@@ -17,9 +17,8 @@ public class EnergyServiceImpl implements EnergyService {
     private EnergyRepository energyRepository;
 
     @Override
-    public void saveEnergy(Product product, String protein, String fat, String carbohydrates, String alimentaryFiber, String kilocalorie) {
+    public void saveEnergy(String protein, String fat, String carbohydrates, String alimentaryFiber, String kilocalorie) {
         EnergyValue energyValue = new EnergyValue();
-        energyValue.setProduct(product);
         energyValue = fillEnergyValues(energyValue, protein, fat, carbohydrates, alimentaryFiber, kilocalorie);
         energyRepository.save(energyValue);
     }
@@ -43,8 +42,8 @@ public class EnergyServiceImpl implements EnergyService {
     }
 
     @Override
-    public EnergyValue editEnergyValues(Product product, String protein, String fat, String carbohydrates, String alimentaryFiber, String kilocalorie) {
-        EnergyValue energyValue = energyRepository.findTopByProduct(product);
+    public EnergyValue editEnergyValues(Long id, String protein, String fat, String carbohydrates, String alimentaryFiber, String kilocalorie) {
+        EnergyValue energyValue = energyRepository.findById(id);
         if(Objects.nonNull(energyValue)){
             fillEnergyValues(energyValue, protein, fat, carbohydrates, alimentaryFiber, kilocalorie);
             energyRepository.save(energyValue);
