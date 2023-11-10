@@ -2,8 +2,10 @@ package dev.mycalories.myCalories.controller;
 
 import dev.mycalories.myCalories.dto.ProductView;
 import dev.mycalories.myCalories.entity.EnergyValue;
+import dev.mycalories.myCalories.entity.Food;
 import dev.mycalories.myCalories.entity.Product;
 import dev.mycalories.myCalories.service.EnergyService;
+import dev.mycalories.myCalories.service.FoodService;
 import dev.mycalories.myCalories.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,9 @@ public class ProductsController {
 
     @Autowired
     private EnergyService energyService;
+
+    @Autowired
+    private FoodService foodService;
 
     @GetMapping("/products/all")
     String showAllProductsPage(Model model) {
@@ -54,42 +59,25 @@ public class ProductsController {
     }
 
     @PostMapping("/products/add")
-    String addProduct(@RequestParam String name,
-                      @RequestParam String brand,
-                      @RequestParam String protein,
-                      @RequestParam String fat,
-                      @RequestParam String carbohydrates,
-                      @RequestParam String alimentaryFiber,
-                      @RequestParam String kilocalorie,
-                      Model model) {
-        String resultMessage;
-        Product product = productsService.saveProduct(name, brand);
-        if (product != null) {
-            energyService.saveEnergy(product, protein, fat, carbohydrates, alimentaryFiber, kilocalorie);
-            resultMessage = "успешно добавлено";
-        } else {
-            resultMessage = "продукт не был добавлен";
-        }
+    String addProduct(@RequestParam String name, @RequestParam String brand, @RequestParam String protein, @RequestParam String fat, @RequestParam String carbs, @RequestParam String fibers, @RequestParam String kkal, Model model) {
+        EnergyValue energyValue = energyService.createEnergyValue(protein, fat, carbs, fibers, kkal);
+        Product product = productsService.createProduct(name, brand, energyValue);
+        Food food = foodService.addProduct(product);
+        String resultMessage = Objects.isNull(food) ? "Ошибка" : "Успешно добавлено";
         model.addAttribute("message", resultMessage);
         return "products/add_product";
     }
 
     @PostMapping("/products/edit/{id}")
-    String editProduct(@PathVariable(value = "id") long id,
-                       @RequestParam String name,
-                       @RequestParam String brand,
-                       @RequestParam String protein,
-                       @RequestParam String fat,
-                       @RequestParam String carbohydrates,
-                       @RequestParam String alimentaryFiber,
-                       @RequestParam String kilocalorie,
-                       Model model) {
+    String editProduct(@PathVariable(value = "id") long id, @RequestParam String name, @RequestParam String brand, @RequestParam String protein, @RequestParam String fat, @RequestParam String carbs, @RequestParam String fibers, @RequestParam String kkal, Model model) {
         String message;
-        Product product = productsService.editProduct(id, name, brand);
-        EnergyValue energyValue = energyService.editEnergyValues(
-                product, protein, fat, carbohydrates, alimentaryFiber, kilocalorie);
         String resultPath;
-        if (Objects.isNull(product) || Objects.isNull(energyValue)) {
+        Product product = productsService.findProduct(id);
+        EnergyValue energyValue = product.getEnergyValue();
+        energyValue = energyService.editEnergyValues(energyValue, protein, fat, carbs, fibers, kkal);
+        product = productsService.editProduct(product, name, brand, energyValue);
+        Food food = foodService.editProduct(product);
+        if (Objects.isNull(food)) {
             message = "Не удалось изменить продукт";
             resultPath = "products/edit_product/" + id;
         } else {
@@ -102,8 +90,8 @@ public class ProductsController {
 
     @PostMapping("/products/del/{id}")
     String deleteProduct(@PathVariable(value = "id") long id, Model model) {
-//        productsService.delProduct(id);
-        energyService.delEnergyValue(new Product(id));
-        return "/products/my";
+        Product product = productsService.findProduct(id);
+        foodService.delProduct(product);
+        return "redirect:/products/my";
     }
 }

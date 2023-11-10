@@ -1,20 +1,19 @@
 package dev.mycalories.myCalories.service;
 
 import dev.mycalories.myCalories.dto.ProductView;
+import dev.mycalories.myCalories.entity.EnergyValue;
 import dev.mycalories.myCalories.entity.Product;
 import dev.mycalories.myCalories.entity.User;
 
 import java.util.List;
 
 public interface ProductsService {
-    Product saveProduct(String name,
-                        String brand);
+    Product findProduct(Long id);
+    Product createProduct(String name,
+                          String brand,
+                          EnergyValue energyValue);
 
-    Product editProduct(Long id,
-                     String name,
-                     String brand);
-
-    void delProduct(Long id);
+    Product editProduct(Product product, String name, String brand, EnergyValue energyValue);
 
     boolean checkProductExist(String name, String brand, User user);
 

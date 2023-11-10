@@ -1,27 +1,28 @@
 package dev.mycalories.myCalories.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Entity
-@AllArgsConstructor
+@Table(name = "products")
+@Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Data
-@Table(name = "products")
 public class Product {
-    @NonNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NonNull
     private String name;
+    @NonNull
     private String brand;
+    @NonNull
     @ManyToOne
     private User user;
-
-    public Product(String name, String brand, User user) {
-        this.name = name;
-        this.brand = brand;
-        this.user = user;
-    }
+    @NonNull
+    @OneToOne(cascade = CascadeType.ALL)
+    private EnergyValue energyValue;
 }

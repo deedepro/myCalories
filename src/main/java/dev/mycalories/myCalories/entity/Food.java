@@ -1,23 +1,29 @@
 package dev.mycalories.myCalories.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
-@Table(name = "foods")
+@NoArgsConstructor
 public class Food {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    private Recipe recipe;
+
+    @OneToOne(cascade = CascadeType.ALL)
     private Product product;
 
-    @OneToOne
-    private Recipe recipe;
+    public Food(Product product) {
+        this.product = product;
+    }
+
+    public Food(Recipe recipe) {
+        this.recipe = recipe;
+    }
 }

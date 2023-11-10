@@ -1,26 +1,21 @@
 package dev.mycalories.myCalories.service;
 
 import dev.mycalories.myCalories.entity.EnergyValue;
-import dev.mycalories.myCalories.entity.Product;
 
 public interface EnergyService {
-    void saveEnergy(Product product,
-                    String protein,
-                    String fat,
-                    String carbohydrates,
-                    String alimentaryFiber,
-                    String kilocalorie);
 
-    EnergyValue findByProduct(Product product);
-    Double calcKilocalorie(EnergyValue energyValue);
-    Double nonNullParam(String param);
+    EnergyValue createEnergyValue(String protein,
+                                  String fat,
+                                  String carbohydrates,
+                                  String alimentaryFiber,
+                                  String kilocalorie);
 
-    EnergyValue editEnergyValues(Product product,
-                          String protein,
-                          String fat,
-                          String carbohydrates,
-                          String alimentaryFiber,
-                          String kilocalorie);
+    EnergyValue editEnergyValues(EnergyValue energyValue,
+                                 String protein,
+                                 String fat,
+                                 String carbs,
+                                 String fibers,
+                                 String kkal);
 
-    void delEnergyValue(Product product);
+    Double calcKkal(EnergyValue energyValue);
 }

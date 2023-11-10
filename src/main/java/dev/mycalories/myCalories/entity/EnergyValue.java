@@ -1,38 +1,30 @@
 package dev.mycalories.myCalories.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
 @Table(name = "energy_values")
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class EnergyValue {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Product product;
+    @NonNull
     private Double protein;
+    @NonNull
     private Double fat;
+    @NonNull
     private Double carbohydrates;
+    @NonNull
     private Double alimentaryFiber;
+    @NonNull
     private Double kilocalorie;
-
-    public EnergyValue(Product product, Double protein, Double fat, Double carbohydrates, Double alimentaryFiber, Double kilocalorie) {
-        this.product = product;
-        this.protein = protein;
-        this.fat = fat;
-        this.carbohydrates = carbohydrates;
-        this.alimentaryFiber = alimentaryFiber;
-        this.kilocalorie = kilocalorie;
-    }
 }

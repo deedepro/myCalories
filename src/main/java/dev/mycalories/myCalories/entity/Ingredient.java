@@ -1,30 +1,30 @@
 package dev.mycalories.myCalories.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "ingredients")
+@Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    /**
-     * Рецепт
-     */
+    @NonNull
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Recipe recipe;
+    @NonNull
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
+    @NonNull
     private Double weight;
-
-    public Ingredient(Recipe recipe, Product product, Double weight) {
-        this.recipe = recipe;
-        this.product = product;
-        this.weight = weight;
-    }
 }

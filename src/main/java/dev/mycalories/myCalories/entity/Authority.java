@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "authorities")
 public class Authority {
     @Id

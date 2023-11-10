@@ -27,36 +27,27 @@ public class ProductsServiceImpl implements ProductsService {
     private ProductsRepository productsRepository;
 
     @Override
-    public Product saveProduct(String name, String brand) {
+    public Product findProduct(Long id) {
+        return productsRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Product createProduct(String name, String brand, EnergyValue energyValue) {
         User currentUser = registrationService.getCurrentUser();
-        Assert.isTrue(currentUser != null, "Не найден текущий пользователь");
-        Product product = makeProduct(name, brand, currentUser);
-        if (product != null) {
-            productsRepository.save(product);
-            return product;
-        } else {
+        boolean isProductExist = checkProductExist(name, brand, currentUser);
+        if(isProductExist){
             return null;
         }
+        return new Product(name,brand,currentUser,energyValue);
     }
 
     @Override
-    public Product editProduct(Long id, String name, String brand) {
-        Product product = productsRepository.findById(id).orElse(null);
-        if (Objects.nonNull(product)) {
-            product.setName(name);
-            product.setBrand(brand);
-            productsRepository.save(product);
-        }
+    public Product editProduct(Product product, String name, String brand, EnergyValue energyValue) {
+        product.setName(name);
+        product.setBrand(brand);
+        product.setEnergyValue(energyValue);
         return product;
 
-    }
-
-    @Override
-    public void delProduct(Long id) {
-        Product product = productsRepository.findById(id).orElse(null);
-        if(Objects.nonNull(product)){
-            productsRepository.delete(product);
-        }
     }
 
     @Override
@@ -90,10 +81,7 @@ public class ProductsServiceImpl implements ProductsService {
         while (iterator.hasNext()) {
             Product product = iterator.next();
             ProductView productView = new ProductView(product.getId(), product.getName(), product.getBrand());
-            EnergyValue energyValue = energyService.findByProduct(product);
-            if (energyValue == null) {
-                continue;
-            }
+            EnergyValue energyValue = product.getEnergyValue();
             productView.setEnergyValues(
                     energyValue.getProtein(),
                     energyValue.getFat(),
