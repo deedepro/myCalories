@@ -6,5 +6,23 @@
 </head>
 <body>
 <h1>Edit product</h1>
+<p th:text="${message}">Сообщение</p>
+<form action="/products/edit" method="post">
+    <label for="name">Название продукта</label>
+    <input required type="text" name="name" id="name"/>
+    <label for="brand">Производителя</label>
+    <input required type="text" name="brand" id="brand"/>
+    <label for="protein">Белки</label>
+    <input type="number" name="protein" id="protein"/>
+    <label for="fat">Жиры</label>
+    <input type="number" name="fat" id="fat"/>
+    <label for="carbohydrates">Углеводы</label>
+    <input type="number" name="carbohydrates" id="carbohydrates"/>
+    <label for="alimentaryFiber">Пищевые волокна</label>
+    <input type="number" name="alimentaryFiber" id="alimentaryFiber"/>
+    <label for="kilocalorie">Ккал</label>
+    <input placeholder="Можно оставить пустым" type="number" name="kilocalorie" id="kilocalorie"/>
+    <input type="submit" value="Добавить продукт">
+</form>
 </body>
 </html>

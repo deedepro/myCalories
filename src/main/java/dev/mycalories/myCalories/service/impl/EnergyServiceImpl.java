@@ -16,7 +16,7 @@ public class EnergyServiceImpl implements EnergyService {
     private EnergyRepository energyRepository;
 
     @Override
-    public void saveEnergy(Products product, String protein, String fat, String carbohydrates, String alimentaryFiber, String kilocalorie) {
+    public void saveEnergy(Products product, Double protein, Double fat, Double carbohydrates, Double alimentaryFiber, Double kilocalorie) {
         EnergyValues energyValues = new EnergyValues();
         energyValues.setProduct(product);
         energyValues.setProtein(nonNullParam(protein));
@@ -47,11 +47,7 @@ public class EnergyServiceImpl implements EnergyService {
     }
 
     @Override
-    public Double nonNullParam(String param) {
-        try {
-            return Double.parseDouble(param);
-        } catch (Exception e) {
-            return 0.0;
-        }
+    public Double nonNullParam(Double param) {
+        return param == null ? 0.0 : param;
     }
 }

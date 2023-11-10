@@ -12,7 +12,7 @@ public class ProductView {
     @NonNull
     private Long id;
     private String name, brand;
-    private String protein, fat, carb, fibers, kkal;
+    private Double protein, fat, carb, fibers, kkal;
 
     public ProductView(@NonNull Long id, String name, String brand) {
         this.id = id;
@@ -21,10 +21,10 @@ public class ProductView {
     }
 
     public void setEnergyValues(Double protein, Double fat, Double carb, Double fibers, Double kkal) {
-        this.protein = protein.toString();
-        this.fat = fat.toString();
-        this.carb = carb.toString();
-        this.fibers = fibers.toString();
-        this.kkal = kkal.toString();
+        this.protein = protein;
+        this.fat = fat;
+        this.carb = carb;
+        this.fibers = fibers;
+        this.kkal = kkal;
     }
 }

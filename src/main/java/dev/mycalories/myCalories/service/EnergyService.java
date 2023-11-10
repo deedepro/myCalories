@@ -5,13 +5,13 @@ import dev.mycalories.myCalories.entity.Products;
 
 public interface EnergyService {
     void saveEnergy(Products product,
-                    String protein,
-                    String fat,
-                    String carbohydrates,
-                    String alimentaryFiber,
-                    String kilocalorie);
+                    Double protein,
+                    Double fat,
+                    Double carbohydrates,
+                    Double alimentaryFiber,
+                    Double kilocalorie);
 
     EnergyValues findByProduct(Products product);
     Double calcKilocalorie(EnergyValues energyValues);
-    Double nonNullParam(String param);
+    Double nonNullParam(Double param);
 }
