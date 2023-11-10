@@ -16,38 +16,34 @@ public class EnergyServiceImpl implements EnergyService {
     private EnergyRepository energyRepository;
 
     @Override
-    public void saveEnergy(Product product, Double protein, Double fat, Double carbohydrates, Double alimentaryFiber, Double kilocalorie) {
+    public void saveEnergy(Product product, String protein, String fat, String carbohydrates, String alimentaryFiber, String kilocalorie) {
         EnergyValue energyValue = new EnergyValue();
         energyValue.setProduct(product);
         energyValue.setProtein(nonNullParam(protein));
         energyValue.setFat(nonNullParam(fat));
         energyValue.setCarbohydrates(nonNullParam(carbohydrates));
         energyValue.setAlimentaryFiber(nonNullParam(alimentaryFiber));
-        energyValue.setKilocalorie(calcKilocalorie(energyValue));
+        energyValue.setKilocalorie(kilocalorie.isEmpty()
+                ? calcKilocalorie(energyValue)
+                : Double.parseDouble(kilocalorie));
         energyRepository.save(energyValue);
     }
 
     @Override
     public EnergyValue findByProduct(Product product) {
-        Long productId = product.getId();
-        return energyRepository.findById(productId).orElse(null);
+        return energyRepository.findTopByProduct(product);
     }
 
     @Override
     public Double calcKilocalorie(EnergyValue energyValue) {
-        Double kilocalorie = energyValue.getKilocalorie();
-        if (kilocalorie != null) {
-            return kilocalorie;
-        } else {
-            kilocalorie = (energyValue.getProtein() + energyValue.getCarbohydrates()) * 4
-                    + energyValue.getFat() * 9 + energyValue.getAlimentaryFiber() * 2;
-        }
-        BigDecimal round = BigDecimal.valueOf(kilocalorie).setScale(2, RoundingMode.HALF_UP);
-        return round.doubleValue();
+        BigDecimal result = BigDecimal.valueOf(
+                (energyValue.getProtein() + energyValue.getCarbohydrates()) * 4
+                        + energyValue.getFat() * 9 + energyValue.getAlimentaryFiber() * 2);
+        return result.setScale(2, RoundingMode.HALF_UP).doubleValue();
     }
 
     @Override
-    public Double nonNullParam(Double param) {
-        return param == null ? 0.0 : param;
+    public Double nonNullParam(String param) {
+        return param.isEmpty() ? 0.0 : Double.parseDouble(param);
     }
 }

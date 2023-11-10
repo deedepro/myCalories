@@ -54,11 +54,11 @@ public class ProductsController {
     @PostMapping("/products/add")
     String addProduct(@RequestParam String name,
                       @RequestParam String brand,
-                      @RequestParam Double protein,
-                      @RequestParam Double fat,
-                      @RequestParam Double carbohydrates,
-                      @RequestParam Double alimentaryFiber,
-                      @RequestParam Double kilocalorie,
+                      @RequestParam String protein,
+                      @RequestParam String fat,
+                      @RequestParam String carbohydrates,
+                      @RequestParam String alimentaryFiber,
+                      @RequestParam String kilocalorie,
                       Model model){
         String resultMessage;
         Product product = productsService.saveProduct(name, brand);
