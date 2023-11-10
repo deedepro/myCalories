@@ -5,16 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-public class Foods {
+@AllArgsConstructor
+@Table(name = "authorities")
+public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    private Products product;
+    private String username;
+    private String authority;
 
-    @OneToOne
-    private Recipes recipe;
 }

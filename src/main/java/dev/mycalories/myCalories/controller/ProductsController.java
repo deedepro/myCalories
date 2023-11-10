@@ -1,7 +1,7 @@
 package dev.mycalories.myCalories.controller;
 
 import dev.mycalories.myCalories.dto.ProductView;
-import dev.mycalories.myCalories.entity.Products;
+import dev.mycalories.myCalories.entity.Product;
 import dev.mycalories.myCalories.service.EnergyService;
 import dev.mycalories.myCalories.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class ProductsController {
                       @RequestParam Double kilocalorie,
                       Model model){
         String resultMessage;
-        Products product = productsService.saveProduct(name, brand);
+        Product product = productsService.saveProduct(name, brand);
         if(product != null){
             energyService.saveEnergy(product, protein, fat, carbohydrates, alimentaryFiber, kilocalorie);
             resultMessage = "успешно добавлено";

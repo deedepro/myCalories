@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ingredients {
+@Table(name = "ingredients")
+public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,8 +17,14 @@ public class Ingredients {
      * Рецепт
      */
     @ManyToOne
-    private Recipes recipe;
+    private Recipe recipe;
     @ManyToOne
-    private Products product;
+    private Product product;
     private Double weight;
+
+    public Ingredient(Recipe recipe, Product product, Double weight) {
+        this.recipe = recipe;
+        this.product = product;
+        this.weight = weight;
+    }
 }

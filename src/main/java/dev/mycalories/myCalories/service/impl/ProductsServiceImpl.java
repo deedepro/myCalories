@@ -1,9 +1,9 @@
 package dev.mycalories.myCalories.service.impl;
 
 import dev.mycalories.myCalories.dto.ProductView;
-import dev.mycalories.myCalories.entity.EnergyValues;
-import dev.mycalories.myCalories.entity.Products;
-import dev.mycalories.myCalories.entity.Users;
+import dev.mycalories.myCalories.entity.EnergyValue;
+import dev.mycalories.myCalories.entity.Product;
+import dev.mycalories.myCalories.entity.User;
 import dev.mycalories.myCalories.repository.ProductsRepository;
 import dev.mycalories.myCalories.service.EnergyService;
 import dev.mycalories.myCalories.service.ProductsService;
@@ -29,10 +29,10 @@ public class ProductsServiceImpl implements ProductsService {
     private ProductsRepository productsRepository;
 
     @Override
-    public Products saveProduct(String name, String brand) {
-        Users currentUser = registrationService.getCurrentUser();
+    public Product saveProduct(String name, String brand) {
+        User currentUser = registrationService.getCurrentUser();
         Assert.isTrue(currentUser != null, "Не найден текущий пользователь");
-        Products product = makeProduct(name, brand, currentUser);
+        Product product = makeProduct(name, brand, currentUser);
         if (product != null) {
             productsRepository.save(product);
             return product;
@@ -52,31 +52,31 @@ public class ProductsServiceImpl implements ProductsService {
     }
 
     @Override
-    public boolean checkProductExist(String name, String brand, Users user) {
+    public boolean checkProductExist(String name, String brand, User user) {
         return productsRepository.existsByNameAndBrandAndUser(name, brand, user);
     }
 
     @Override
     public List<ProductView> collectAllProducts() {
-        Iterable<Products> allProducts = productsRepository.findAll();
+        Iterable<Product> allProducts = productsRepository.findAll();
         return createProductViews(allProducts);
     }
 
     @Override
     public List<ProductView> collectMyProducts() {
-        Users currentUser = registrationService.getCurrentUser();
+        User currentUser = registrationService.getCurrentUser();
         Assert.isTrue(currentUser != null, "Не найден текущий пользователь");
-        Iterable<Products> allProducts = productsRepository.findAllByUser(currentUser);
+        Iterable<Product> allProducts = productsRepository.findAllByUser(currentUser);
         return createProductViews(allProducts);
     }
 
-    private List<ProductView> createProductViews(Iterable<Products> products){
-        Iterator<Products> iterator = products.iterator();
+    private List<ProductView> createProductViews(Iterable<Product> products){
+        Iterator<Product> iterator = products.iterator();
         List<ProductView> result = new ArrayList<>();
         while(iterator.hasNext()){
-            Products product = iterator.next();
+            Product product = iterator.next();
             ProductView productView = new ProductView(product.getId(), product.getName(),product.getBrand());
-            EnergyValues energyValue = energyService.findByProduct(product);
+            EnergyValue energyValue = energyService.findByProduct(product);
             if(energyValue == null){
                 continue;
             }
@@ -92,16 +92,16 @@ public class ProductsServiceImpl implements ProductsService {
         return result;
     }
 
-    private Products makeProduct(String name, String brand, Users user) {
+    private Product makeProduct(String name, String brand, User user) {
         boolean isProductExist = checkProductExist(name, brand, user);
         if (isProductExist) {
             return null;
         } else {
-            Products products = new Products();
-            products.setName(name);
-            products.setBrand(brand);
-            products.setUser(user);
-            return products;
+            Product product = new Product();
+            product.setName(name);
+            product.setBrand(brand);
+            product.setUser(user);
+            return product;
         }
     }
 }

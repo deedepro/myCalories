@@ -9,12 +9,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Products {
+@Table(name = "foods")
+public class Food {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String brand;
-    @ManyToOne
-    private Users user;
+
+    @OneToOne
+    private Product product;
+
+    @OneToOne
+    private Recipe recipe;
 }

@@ -1,7 +1,7 @@
 package dev.mycalories.myCalories.service.impl;
 
-import dev.mycalories.myCalories.entity.EnergyValues;
-import dev.mycalories.myCalories.entity.Products;
+import dev.mycalories.myCalories.entity.EnergyValue;
+import dev.mycalories.myCalories.entity.Product;
 import dev.mycalories.myCalories.repository.EnergyRepository;
 import dev.mycalories.myCalories.service.EnergyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,31 +16,31 @@ public class EnergyServiceImpl implements EnergyService {
     private EnergyRepository energyRepository;
 
     @Override
-    public void saveEnergy(Products product, Double protein, Double fat, Double carbohydrates, Double alimentaryFiber, Double kilocalorie) {
-        EnergyValues energyValues = new EnergyValues();
-        energyValues.setProduct(product);
-        energyValues.setProtein(nonNullParam(protein));
-        energyValues.setFat(nonNullParam(fat));
-        energyValues.setCarbohydrates(nonNullParam(carbohydrates));
-        energyValues.setAlimentaryFiber(nonNullParam(alimentaryFiber));
-        energyValues.setKilocalorie(calcKilocalorie(energyValues));
-        energyRepository.save(energyValues);
+    public void saveEnergy(Product product, Double protein, Double fat, Double carbohydrates, Double alimentaryFiber, Double kilocalorie) {
+        EnergyValue energyValue = new EnergyValue();
+        energyValue.setProduct(product);
+        energyValue.setProtein(nonNullParam(protein));
+        energyValue.setFat(nonNullParam(fat));
+        energyValue.setCarbohydrates(nonNullParam(carbohydrates));
+        energyValue.setAlimentaryFiber(nonNullParam(alimentaryFiber));
+        energyValue.setKilocalorie(calcKilocalorie(energyValue));
+        energyRepository.save(energyValue);
     }
 
     @Override
-    public EnergyValues findByProduct(Products product) {
+    public EnergyValue findByProduct(Product product) {
         Long productId = product.getId();
         return energyRepository.findById(productId).orElse(null);
     }
 
     @Override
-    public Double calcKilocalorie(EnergyValues energyValues) {
-        Double kilocalorie = energyValues.getKilocalorie();
+    public Double calcKilocalorie(EnergyValue energyValue) {
+        Double kilocalorie = energyValue.getKilocalorie();
         if (kilocalorie != null) {
             return kilocalorie;
         } else {
-            kilocalorie = (energyValues.getProtein() + energyValues.getCarbohydrates()) * 4
-                    + energyValues.getFat() * 9 + energyValues.getAlimentaryFiber() * 2;
+            kilocalorie = (energyValue.getProtein() + energyValue.getCarbohydrates()) * 4
+                    + energyValue.getFat() * 9 + energyValue.getAlimentaryFiber() * 2;
         }
         BigDecimal round = BigDecimal.valueOf(kilocalorie).setScale(2, RoundingMode.HALF_UP);
         return round.doubleValue();

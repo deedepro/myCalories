@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class EnergyValues {
+@Table(name = "energy_values")
+public class EnergyValue {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -17,11 +18,20 @@ public class EnergyValues {
 
     @OneToOne
 //    @JoinColumn(name = "id")
-    private Products product;
+    private Product product;
 
     private Double protein;
     private Double fat;
     private Double carbohydrates;
     private Double alimentaryFiber;
     private Double kilocalorie;
+
+    public EnergyValue(Product product, Double protein, Double fat, Double carbohydrates, Double alimentaryFiber, Double kilocalorie) {
+        this.product = product;
+        this.protein = protein;
+        this.fat = fat;
+        this.carbohydrates = carbohydrates;
+        this.alimentaryFiber = alimentaryFiber;
+        this.kilocalorie = kilocalorie;
+    }
 }
