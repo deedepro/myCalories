@@ -1,0 +1,20 @@
+<div th:fragment="header">
+    <nav class="py-2 bg-body-tertiary border-bottom">
+        <div class="container d-flex flex-wrap">
+            <ul class="nav me-auto">
+                <li class="nav-item"><a href="/" class="nav-link link-body-emphasis px-2 active" aria-current="page">Главная</a></li>
+                <li class="nav-item"><a href="/diary" class="nav-link link-body-emphasis px-2">Дневник</a></li>
+                <li class="nav-item"><a href="/products" class="nav-link link-body-emphasis px-2">Продукты</a></li>
+                <li class="nav-item"><a href="/recipe" class="nav-link link-body-emphasis px-2">Рецепты</a></li>
+            </ul>
+            <ul class="nav" sec:authorize="isAnonymous()">
+                <li class="nav-item"><a href="/login" class="nav-link link-body-emphasis px-2">Войти</a></li>
+                <li class="nav-item"><a href="/registration" class="nav-link link-body-emphasis px-2">Зарегистрироваться</a></li>
+            </ul>
+            <ul class="nav" sec:authorize="isAuthenticated()">
+                <li class="nav-item"><a href="#" class="nav-link link-body-emphasis px-2" sec:authentication="name"></a></li>
+            <li class="nav-item"><a href="/logout" class="nav-link link-body-emphasis px-2">Выход</a></li>
+            </ul>
+        </div>
+    </nav>
+</div>

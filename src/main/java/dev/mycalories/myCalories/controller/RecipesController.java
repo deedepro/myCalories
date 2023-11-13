@@ -8,7 +8,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class RecipesController {
 
     @GetMapping("/recipes")
-    String showDiaryPage(Model model){
+    String showRecipePage(Model model){
         return "recipes/my_recipes";
+    }
+
+    @GetMapping("/recipe/add")
+    String showAddRecipePage(Model model){
+        return "recipe/add_recipe";
     }
 }

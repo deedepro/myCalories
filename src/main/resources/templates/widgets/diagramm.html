@@ -1,0 +1,42 @@
+<div th:fragment="pfc-dia-2">
+    <section>
+        <div class="circle-container">
+            <h2>Соотношение БЖУ</h2>
+            <div id="protein" class="circle-data"></div>
+            <div id="fat" class="circle-data"></div>
+            <div id="carbs" class="circle-data"></div>
+            <div id="fibers" class="circle-data"></div>
+        </div>
+        <div class="circle-right-desc">
+            <ul>
+                <li data-name="Protein">Белки</li>
+                <li data-name="Fat">Жиры</li>
+                <li data-name="Carbs">Углеводы</li>
+                <li data-name="Fibers">Пищевые волокна</li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<div th:fragment="kcal-diagramm">
+    <section>
+        <h2>Расход ккал</h2>
+        <div class="pie animate" style="--p:90;--c:lightgreen"> 90%</div>
+    </section>
+</div>
+
+<div th:fragment="pfc-dia">
+    <h2>Расход бжу</h2>
+    <svg class="pie" width="200" viewBox="0 0 40 40">
+        <g>
+            <circle r="15.9155" cx="50%" cy="50%"></circle>
+            <circle r="15.9155" cx="50%" cy="50%"></circle>
+            <circle r="15.9155" cx="50%" cy="50%"></circle>
+            <circle r="15.9155" cx="50%" cy="50%"></circle>
+            <text x="50%" y="50%">Белки 25%</text>
+            <text x="50%" y="50%">Жиры 25%</text>
+            <text x="50%" y="50%">Углеводы 25%</text>
+            <text x="50%" y="50%">Волокна 25%</text>
+        </g>
+    </svg>
+</div>

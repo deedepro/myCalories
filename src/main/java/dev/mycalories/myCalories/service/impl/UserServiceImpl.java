@@ -2,8 +2,9 @@ package dev.mycalories.myCalories.service.impl;
 
 import dev.mycalories.myCalories.entity.User;
 import dev.mycalories.myCalories.repository.UsersRepository;
-import dev.mycalories.myCalories.service.RegistrationService;
+import dev.mycalories.myCalories.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
-public class RegistrationServiceImpl implements RegistrationService { //TODO: переименовать в UserService
+public class UserServiceImpl implements UserService {
     @Autowired
     private UserDetailsManager userDetailsManager;
 
@@ -46,6 +47,16 @@ public class RegistrationServiceImpl implements RegistrationService { //TODO: п
             return usersRepository.findUsersByUsername(username);
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public boolean isAuthentication() {
+        Authentication authentication = this.securityContextHolderStrategy.getContext().getAuthentication();
+        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
+            return authentication.isAuthenticated();
+        } else {
+            return false;
         }
     }
 

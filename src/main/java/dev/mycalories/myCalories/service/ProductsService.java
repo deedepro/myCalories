@@ -22,4 +22,6 @@ public interface ProductsService {
     List<ProductView> collectMyProducts();
 
     ProductView makeProductView(Long productId);
+
+    ProductView createProductView(Product products);
 }

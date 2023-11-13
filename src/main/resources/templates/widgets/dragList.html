@@ -1,0 +1,63 @@
+<html lang="ru" xmlns:th="https://www.thymeleaf.org">
+<div th:fragment="dragList">
+    <div class="example-parent">
+        <div class="example-origin">
+            Все продукты
+            <div th:each="el : ${products}">
+                <div th:id="'draggable-' + ${el.getId()}" class="example-draggable" draggable="true" ondragstart="onDragStart(event);">
+                    <h3 th:id="'name-' + ${el.getId()}"
+                        th:text=" ${el.getName()}
+                        + ' от ' + ${el.getBrand()}
+                        + '. Ккал: ' + ${el.getKkal()}">
+                    </h3>
+                    <p th:text="'Пищевая ценность в 100г продукта: белков - ' + ${el.getProtein()} + ' г; '
+                        + 'жиров - ' + ${el.getFat()} + ' г; '
+                        + 'углеводов - : ' + ${el.getCarb()} + ' г; '
+                        + 'пищевых волокон - ' + ${el.getFibers()} + ' г.'">
+                    </p>
+                    <p th:id="'result-' + ${el.getId()}"></p>
+                    <form th:action="'/diary/add/' + ${el.getId()}" method="post">
+                        <label>
+                            <input required th:id="'weight-' + ${el.getId()}" name="weight" type="number">
+                        </label>
+                        <input type="submit" style="visibility: hidden">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="example-dropzone" ondragover="onDragOver(event);" ondrop="onDrop(event); addToDiary(event)">
+            Дневник
+            <div th:each="entry : ${entries}">
+                <div th:id="'draggable-' + ${entry.getId()}" class="example-draggable" draggable="true" ondragstart="onDragStart(event);">
+                    <h3 th:id="'name-' + ${entry.getId()}"
+                        th:text=" ${entry.getProductView().getName()}
+                        + ' от ' + ${entry.getProductView().getBrand()}
+                        + '. Ккал: ' + ${entry.getProductView().getKkal()}">
+                    </h3>
+                    <p th:text="
+                        'Пищевая ценность в 100г продукта: белков - ' + ${entry.getProtein()} + ' г; '
+                        + 'жиров - ' + ${entry.getProductView().getFat()} + ' г; '
+                        + 'углеводов - : ' + ${entry.getProductView().getCarb()} + ' г; '
+                        + 'пищевых волокон - ' + ${entry.getProductView().getFibers()} + ' г.'">
+                    </p>
+                    <p th:id="'result-' + ${entry.getId()}"></p>
+                    <form th:action="'/diary/edit/' + ${entry.getId()}" method="post">
+                        <label>
+                            <input required
+                                   th:id="'weight-' + ${entry.getId()}"
+                                   th:value="${entry.getWeight()}"
+                                   name="weight" type="number">
+                        </label>
+                        <input type="submit" value="Изменить">
+                    </form>
+                    <form th:action="'diary/del/' + ${entry.getId()}" method="post">
+                        <input type="submit" value="Удалить">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{../js/jquery.min.js}"></script>
+    <script th:src="@{../js/test.js}"></script>
+</div>
+</html>

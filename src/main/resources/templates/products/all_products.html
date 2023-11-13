@@ -5,6 +5,7 @@
 </head>
 <body>
 <h1 th:inline="text">All Products</h1>
+<p th:text="${message}">Сообщение</p>
 <!--Выдаем из БД-->
 <div th:each="el : ${products}">
     <h3 th:text="${el.getName()} + ' от ' + ${el.getBrand()} + '. Ккал: ' + ${el.getKkal()}"></h3>
@@ -12,9 +13,15 @@
          + 'жиров - ' + ${el.getFat()} + ' г; '
          + 'углеводов - : ' + ${el.getCarb()} + ' г; '
          + 'пищевых волокон - ' + ${el.getFibers()} + ' г.'"></p><br>
+    <form th:action="'/diary/add/' + ${el.getId()}" method="post">
+        <label for="weight"></label>
+        <input required id="weight" name="weight" type="number"/>
+        <input type="submit" value="Записать в дневник">
+    </form>
 </div>
 <div>
-    <a href="/products/add">Добавить продукт</a>
+    <a href="/products/add">Добавить продукт</a><br>
+    <a href="/hello">На главную</a>
 </div>
 </body>
 </html>

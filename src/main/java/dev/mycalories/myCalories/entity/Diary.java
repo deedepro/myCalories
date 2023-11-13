@@ -17,7 +17,7 @@ public class Diary {
     @NonNull
     private Date date;
     @NonNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Mealtime mealtime;
     @NonNull
     @ManyToOne

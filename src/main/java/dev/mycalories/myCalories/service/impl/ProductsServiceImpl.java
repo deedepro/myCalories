@@ -7,7 +7,7 @@ import dev.mycalories.myCalories.entity.User;
 import dev.mycalories.myCalories.repository.ProductsRepository;
 import dev.mycalories.myCalories.service.EnergyService;
 import dev.mycalories.myCalories.service.ProductsService;
-import dev.mycalories.myCalories.service.RegistrationService;
+import dev.mycalories.myCalories.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -18,7 +18,7 @@ import java.util.*;
 public class ProductsServiceImpl implements ProductsService {
 
     @Autowired
-    private RegistrationService registrationService;
+    private UserService userService;
 
     @Autowired
     private EnergyService energyService;
@@ -33,7 +33,7 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public Product createProduct(String name, String brand, EnergyValue energyValue) {
-        User currentUser = registrationService.getCurrentUser();
+        User currentUser = userService.getCurrentUser();
         boolean isProductExist = checkProductExist(name, brand, currentUser);
         if(isProductExist){
             return null;
@@ -63,7 +63,7 @@ public class ProductsServiceImpl implements ProductsService {
 
     @Override
     public List<ProductView> collectMyProducts() {
-        User currentUser = registrationService.getCurrentUser();
+        User currentUser = userService.getCurrentUser();
         Assert.isTrue(currentUser != null, "Не найден текущий пользователь");
         Iterable<Product> allProducts = productsRepository.findAllByUser(currentUser);
         return createProductViews(allProducts);
@@ -94,7 +94,22 @@ public class ProductsServiceImpl implements ProductsService {
         return result;
     }
 
-    private Product makeProduct(String name, String brand, User user) {
+    @Override
+    public ProductView createProductView(Product product) {
+        ProductView productView = new ProductView(product.getId(), product.getName(), product.getBrand());
+        EnergyValue energyValue = product.getEnergyValue();
+        productView.setEnergyValues(
+                energyValue.getProtein(),
+                energyValue.getFat(),
+                energyValue.getCarbohydrates(),
+                energyValue.getAlimentaryFiber(),
+                energyValue.getKilocalorie()
+        );
+        return productView;
+    }
+
+
+        private Product makeProduct(String name, String brand, User user) {
         boolean isProductExist = checkProductExist(name, brand, user);
         if (isProductExist) {
             return null;

@@ -22,7 +22,9 @@
     <input th:value="${product.getFibers()}" type="number" step="0.01" name="fibers" id="fibers"/>
     <label for="kkal">Ккал</label>
     <input th:value="${product.getKkal()}" placeholder="Можно оставить пустым" type="number" step="0.01" name="kkal" id="kkal"/>
-    <input type="submit" value="Изменить продукт">
+    <input type="submit" value="Изменить продукт"><br>
+    <a href="/products/my">Мои продукты</a><br>
+    <a href="/products/all">Все продукты</a>
 </form>
 </body>
 </html>

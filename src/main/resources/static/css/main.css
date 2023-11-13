@@ -1,0 +1,46 @@
+.div-central{
+    width: 90%;
+    white-space: nowrap;
+    margin: 5%;
+    display: flex;
+}
+
+.div-product{
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+.div-border{
+    border: 3px solid #000;
+    border-radius: 10px;
+}
+
+.two-div{
+    width: 47.5%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.div-one{
+    margin-right: 2.5%;
+}
+
+.div-two{
+    margin-left: 2.5%;
+}
+
+h2{
+    text-align: center;
+}
+
+input{
+    border-radius: 5px;
+    margin: 3% 0 3% 15%;
+    padding: 12px 16px 12px 16px;
+    border: 1px solid #ced4da;
+}
+
+label{
+    margin-right: 20%;
+}

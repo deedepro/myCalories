@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Diary</title>
+    <title>Дневник</title>
+    <link type="text/css" rel="stylesheet" th:href="@{../css/main.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{../css/widgets/drag.css}"/>
 </head>
 <body>
-<h1>Diary</h1>
+<h2>Дневник</h2>
+<h2 th:text="'Общая калорийность за текущие сутки: ' + ${kkal}"></h2>
+<div>
+    <a href="/diary/add">Добавить запись в дневник</a><br>
+    <a href="/hello">На главную</a>
+</div>
+<div th:insert="widgets/dragList :: dragList"></div>
 </body>
 </html>
