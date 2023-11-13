@@ -1,0 +1,8 @@
+CSS:
+# Отступы между строками
+line-height: 34px
+#Курсор при наведении
+cursor: pointer;
+#Нельзя выделять текст
+user-select: none;
+

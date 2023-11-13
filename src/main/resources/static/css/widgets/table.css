@@ -1,0 +1,13 @@
+.table {
+    height: 150px;
+    width: 100%;
+    font-size: .875em;
+}
+
+.table td{
+    text-align: center;
+}
+
+.table td:first-child{
+    text-align: left; !important
+}

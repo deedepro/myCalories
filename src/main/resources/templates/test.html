@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      lang="ru">
+<head>
+    <title>Дневник</title>
+    <link type="text/css" rel="stylesheet" th:href="@{../css/main.css}"/>
+    <!--    <link rel="stylesheet" type="text/css" th:href="@{../css/widgets/modal.css}"/>-->
+    <script th:src="@{../js/jquery.min.js}"></script>
+    <script th:src="@{../js/diary/diaryScripts.js}"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="body/blocks :: header"></div>
+    <div class="content df jc-around">
+        <form action="/test/params" method="get">
+            <label>Дата
+                <input type="date" name="test_date"
+                       th:value="${dateAttr}"
+                       onchange="this.form.submit()">
+            </label><br>
+            <label> выбор 1
+                <input type="radio" name="test_select"
+                       value="1"
+                       th:checked="${selectAttr} == '1'"
+                       onchange="this.form.submit()">
+            </label><br>
+            <label> выбор 2
+                <input type="radio" name="test_select"
+                       value="2"
+                       th:checked="${selectAttr} == '2'"
+                       onchange="this.form.submit()">
+            </label>
+            <input type="submit" value="Готово">
+        </form>
+
+        <h4 th:text="${dateAttr}">Дата</h4>
+        <h4 th:text="${selectAttr}">Выбор</h4>
+    </div>
+    <div th:replace="body/blocks :: footer"></div>
+</div>
+</body>
+</html>

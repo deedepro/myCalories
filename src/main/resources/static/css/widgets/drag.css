@@ -1,0 +1,87 @@
+.main-container {
+    /*border: 2px solid yellow;*/
+    width: 83%;
+    margin-right: 2%;
+    display: flex;
+    height: 70vh;
+}
+
+.list{
+    border: 2px solid black;
+    height: auto;
+    flex-basis: 100%;
+    flex-grow: 1;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+
+.product-list {
+    /*border: 1px solid black;*/
+    overflow-y: auto;
+    height: 90%;
+}
+
+.list-item {
+    height: auto;
+    border: 2px solid black;
+    border-radius: 6px;
+    overflow: hidden;
+    /*background-color: #4AAE9B;*/
+    /*font-weight: normal;*/
+    /*margin-bottom: 10px;*/
+    /*margin-top: 10px;*/
+    padding: 2px;
+}
+
+.entry-list {
+    /*border: 1px solid black;*/
+    /*background-color: #6DB65B;*/
+    /*padding: 0 10px;*/
+    overflow-y: auto;
+    height: 90%;
+    flex-basis: 100%;
+}
+
+.list-name{
+    height: 50px;
+    border-bottom: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.list-name p{
+    text-align: center;
+}
+
+.enrty-name{
+    /*border: 2px solid yellow;*/
+    float: left;
+    width: 70%;
+}
+
+.entry-energy{
+    /*border: 2px solid yellow;*/
+    float: right;
+    width: 30%;
+}
+
+.entry-description{
+    /*border: 2px solid yellow;*/
+    float: left;
+    width: 80%;
+}
+
+.entry-actions{
+    /*border: 2px solid yellow;*/
+    float: right;
+    width: 20%;
+}
+
+.entry-action{
+    float: left;
+}
+
+p{
+    margin: 0;
+}

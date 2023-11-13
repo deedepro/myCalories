@@ -1,0 +1,30 @@
+<div th:fragment="header" class="header df jc-around">
+    <ul class="inline-ul">
+        <li class="nav-li"><a href="/" class="active" aria-current="page">Главная</a></li>
+        <li class="nav-li"><a href="/diary">Дневник</a></li>
+        <li class="nav-li"><a class="active" href="/products">Продукты</a></li>
+        <li class="nav-li"><a href="/recipes">Рецепты</a></li>
+        <li class="nav-li"><a href="/test">Тест</a></li>
+    </ul>
+    <ul class="inline-ul" sec:authorize="isAnonymous()">
+        <li class="nav-li"><a href="/login">Войти</a></li>
+        <li class="nav-li"><a href="/registration">Зарегистрироваться</a></li>
+    </ul>
+    <ul class="inline-ul" sec:authorize="isAuthenticated()">
+        <li class="nav-li"><a href="#" sec:authentication="name"></a></li>
+        <li class="nav-li"><a href="/logout">Выход</a></li>
+    </ul>
+</div>
+
+<div th:fragment="footer" class="footer df jc-around">
+<ul class="inline-ul">
+    <li>Связаться с нами:</li>
+    <li>+7 (999) 450-35-15</li>
+    <li>deedepro@gmail.com</li>
+</ul>
+<ul class="inline-ul">
+    <li class="nav-li"><a href="#">Вконтакте</a></li>
+    <li class="nav-li"><a href="#">Телеграмм</a></li>
+    <li class="nav-li"><a href="#">Whatsapp</a></li>
+</ul>
+</div>
