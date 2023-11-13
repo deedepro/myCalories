@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Hello World!</title>
+</head>
+<body>
+<h1 th:inline="text">All Products</h1>
+<!--Выдаем из БД-->
+<div th:each="el : ${products}">
+    <h3 th:text="${el.getName()} + ' от ' + ${el.getBrand()} + '. Ккал: ' + ${el.getKkal()}"></h3>
+    <p th:text="'Пищевая ценность в 100г продукта: белков - ' + ${el.getProtein()} + ' г; '
+         + 'жиров - ' + ${el.getFat()} + ' г; '
+         + 'углеводов - : ' + ${el.getCarb()} + ' г; '
+         + 'пищевых волокон - ' + ${el.getFibers()} + ' г.'"></p><br>
+</div>
+<div>
+    <a href="/products/add">Добавить продукт</a>
+</div>
+</body>
+</html>

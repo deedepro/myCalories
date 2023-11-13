@@ -44,7 +44,7 @@ public class MainController {
                     @RequestParam String password,
                     Model model) {
         String errorMessage = registrationService.createUser(username, password);
-        String validMessage = "Тест успешно пройден";
+        String validMessage = "Регистрация завершена";
         String message = errorMessage != null ? errorMessage : validMessage;
         model.addAttribute("message", message);
         return null;
