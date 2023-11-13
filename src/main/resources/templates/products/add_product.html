@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add product</title>
+</head>
+<body>
+<h1>Add product</h1>
+<p th:text="${message}">Сообщение</p>
+<form action="/products/add" method="post">
+    <label for="name">Название продукта</label>
+    <input placeholder="Молоко 2.5%" required type="text" name="name" id="name"/>
+    <label for="brand">Производителя</label>
+    <input placeholder="Алтайская буренка" type="text" name="brand" id="brand"/>
+    <label for="protein">Белки</label>
+    <input placeholder="0.00" type="number" step="0.01" name="protein" id="protein"/>
+    <label for="fat">Жиры</label>
+    <input placeholder="0.00" type="number" step="0.01" name="fat" id="fat"/>
+    <label for="carbs">Углеводы</label>
+    <input placeholder="0.00" type="number" step="0.01" name="carbs" id="carbs"/>
+    <label for="fibers">Пищевые волокна</label>
+    <input placeholder="0.00" type="number" step="0.01" name="fibers" id="fibers"/>
+    <label for="kkal">Ккал</label>
+    <input placeholder="Можно оставить пустым" type="number" step="0.01" name="kkal" id="kkal"/>
+    <input type="submit" value="Добавить продукт">
+</form>
+</body>
+</html>
