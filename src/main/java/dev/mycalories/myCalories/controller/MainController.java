@@ -21,7 +21,7 @@ public class MainController {
         if (userService.isAuthentication()){
             Date currentDate = new Date(System.currentTimeMillis());
             model.addAttribute("currentDate",currentDate);
-            return "home";
+            return "home/home";
         }
         else {
             return "hello";

@@ -1,46 +1,287 @@
-.div-central{
-    width: 90%;
-    white-space: nowrap;
-    margin: 5%;
+/*All page*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    height: 100%;
+    min-height: 350px;
+}
+
+/* Structure */
+.wrapper {
     display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
-.div-product{
-    margin-left: auto;
-    margin-right: auto;
-    width: 30%;
+.header {
+    padding: 1rem;
+    border-bottom: 1px solid gray;
+    font-size: 17px;
+    flex: 0 0 auto;
+    margin-bottom: 10px;
 }
 
-.div-border{
-    border: 3px solid #000;
-    border-radius: 10px;
+.content {
+    flex: 1 1 auto;
+    overflow-y: clip;
 }
 
-.two-div{
-    width: 47.5%;
-    display: inline-block;
-    vertical-align: top;
+.footer {
+    padding: 1rem 1rem 2rem;
+    border-top: 1px solid gray;
+    flex: 0 0 auto;
+    margin-top: 10px;
 }
 
-.div-one{
-    margin-right: 2.5%;
+/* header + footer */
+.nav-li{
+    padding: 0 0.5rem;
 }
 
-.div-two{
-    margin-left: 2.5%;
+.nav-li a{
+    color: #0d6efd;
+    text-decoration: none;
+    cursor: pointer;
 }
 
-h2{
+.nav-li a:hover{
+    color: #0a58ca;
+}
+
+.active{
+    border: 1px;
+    border-radius: 6px;
+}
+
+/* text design */
+.gray-p p {
+    color: gray;
+}
+
+.fs-small p {
+    font-size: 11px;
+}
+
+.ta-right {
+    text-align: right;
+}
+
+.ta-center {
     text-align: center;
 }
 
-input{
-    border-radius: 5px;
-    margin: 3% 0 3% 15%;
-    padding: 12px 16px 12px 16px;
-    border: 1px solid #ced4da;
+/* flex design */
+.nowrap {
+    flex-wrap: nowrap;
 }
 
-label{
-    margin-right: 20%;
+.df {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.jc-around {
+    justify-content: space-around;
+}
+
+.jc-right {
+    justify-content: right;
+}
+
+.fb-25 {
+    flex-basis: 25%;
+}
+
+.fb-75 {
+    flex-basis: 75%;
+}
+
+.full-fb {
+    flex-basis: 100%;
+}
+
+.f-central {
+    justify-content: center;
+    align-items: center;
+}
+
+.fw-space {
+    justify-content: space-between;
+}
+
+.fv-center {
+    align-items: center;
+}
+
+.full {
+    width: 100%;
+    height: 100%;
+}
+
+.inline-ul li {
+    display: inline;
+    padding: 0 1rem;
+}
+
+/* Отступы */
+.pv-5px {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.ph-10px {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.pr-32{
+    margin-right: 2rem;
+}
+
+/* Поиск */
+/* list-search */
+.list-search {
+    border-bottom: 1px solid black;
+}
+
+.search-form {
+    position: relative;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    /*background: #F9F0DA;*/
+    padding-left: 15px;
+    height: 42px;
+    border: none;
+    outline: none;
+}
+
+.search-button {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+}
+
+.search-button button:before {
+    content: "\f105";
+    /*color: #F9F0DA;*/
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.search-ico {
+    width: 16px;
+    margin: 2px;
+}
+
+/* Меню */
+.menu-block {
+    width: 200px;
+}
+
+.form_radio_btn label{
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    padding: 0 15px;
+    line-height: 34px;
+    border-radius: 6px;
+    user-select: none;
+    width: 100%;
+}
+
+.form_radio_btn input[type=radio]{
+    display: none;
+}
+
+.form_radio_btn input[type=radio]:checked + label{
+    border: 1px solid #999;
+}
+
+.form_radio_btn label:hover{
+    color: #666;
+}
+
+.form_radio_btn input[type=radio]:disabled + label{
+    background: #efefef;
+    color: #666;
+}
+
+/*list*/
+.list-block {
+    height: 100%;
+    width: 700px;
+    border: 1px solid black;
+    border-radius: 6px;
+}
+
+.list-items {
+    height: calc(100% - 52px);
+    overflow: auto;
+}
+
+.list-item {
+    height: 100px;
+    border-bottom: 1px solid black;
+}
+
+.list-item:last-child{
+    border-bottom: none;
+}
+
+.action-ico {
+    height: 25px;
+}
+
+/* Форма работы с параметрами продукта */
+.param-block {
+    height: 100%;
+    width: 400px;
+}
+
+.params-form {
+    padding: 20px;
+    height: 400px;
+    border-radius: 6px;
+    border: 1px solid black;
+}
+
+.params-form label {
+    float: left;
+    padding-top: 5px;
+}
+
+.params-form input {
+    border-radius: 6px;
+    float: right;
+    height: 30px;
+    width: 200px;
+}
+
+.params-form button {
+    width: 100%;
+    height: 40px;
+}
+
+/* Другие блоки */
+.block{
+    height: 100%;
+    flex-basis: 40%;
+    overflow: auto;
+}
+
+.block-border{
+    border: 1px solid black;
+    border-radius: 6px;
 }

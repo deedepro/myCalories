@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Класс отвечает за работу сайта по пути /products
+ */
 @Controller
 public class ProductsController {
 
@@ -29,6 +32,11 @@ public class ProductsController {
 
     @Autowired
     private FoodService foodService;
+
+    @GetMapping("/products")
+    String showProductsPage(Model model){
+        return "products/products";
+    }
 
     @GetMapping("/products/all")
     String showAllProductsPage(Model model) {

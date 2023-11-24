@@ -33,19 +33,19 @@ public class DiaryServiceImpl implements DiaryService {
 
     }
 
-    @Override
-    public void delete(Diary diary) {
-        diaryRepository.delete(diary);
+    public void deleteEntry(long id) {
+        Diary diary = findDiary(id);
+        if (diary != null) {
+            diaryRepository.delete(diary);
+        }
     }
 
     @Override
-    public void addProduct(long id, int weight) {
+    public void addProduct(long id, int weight, Date date, Mealtime mealtime) {
         Product product = productsService.findProduct(id);
         Food food = foodService.findFood(product);
-        Mealtime mealtime = new Mealtime("Mealtime"); //TODO: заполнить и искать по id
         Double weightValue = Double.parseDouble(String.valueOf(weight));
-        Date currentDate = new Date(System.currentTimeMillis());
-        Diary diary = new Diary(currentDate, mealtime, food, weightValue);
+        Diary diary = new Diary(date, mealtime, food, weightValue);
         diaryRepository.save(diary);
     }
 
@@ -55,7 +55,7 @@ public class DiaryServiceImpl implements DiaryService {
         double result = 0.0;
         for (Diary dayEntry : dayEntries) {
             Product product = dayEntry.getFood().getProduct();
-            if(product != null){
+            if (product != null) {
                 EnergyValue energyValue = product.getEnergyValue();
                 double kkal = energyValue.getKilocalorie() * dayEntry.getWeight() / 100;
                 result = result + kkal;
@@ -65,14 +65,24 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public List<EntryView> collectAllEntries(Date currentDate) {
-        List<Diary> allByDate = diaryRepository.findAllByDate(currentDate);
+    public List<EntryView> collectAllEntriesByDate(Date date) {
+        List<Diary> allByDate = diaryRepository.findAllByDate(date);
         return createEntryViews(allByDate);
     }
 
     @Override
-    public void editDiary(Diary diary) {
-        diaryRepository.save(diary);
+    public List<EntryView> collectAllEntriesByDateAndMealtime(Date date, Mealtime mealtime) {
+        List<Diary> allByDateAndMealtime = diaryRepository.findAllByDateAndMealtime(date, mealtime);
+        return createEntryViews(allByDateAndMealtime);
+    }
+
+    @Override
+    public void editDiary(long id, Double weight) {
+        Diary diary = findDiary(id);
+        if (diary != null) {
+            diary.setWeight(weight);
+            diaryRepository.save(diary);
+        }
     }
 
     private List<EntryView> createEntryViews(List<Diary> allByDate) {

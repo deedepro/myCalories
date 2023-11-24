@@ -1,0 +1,197 @@
+<div th:fragment="products-menu">
+    <div class="form_radio_btn">
+        <input id="my-products" type="radio" name="products" value="my"
+               th:checked="${products == 'my'}"
+               onclick="updatePageWithParams();">
+        <label for="my-products">Мои продукты</label>
+    </div>
+    <div class="form_radio_btn">
+        <input id="all-products" type="radio" name="products" value="all"
+               th:checked="${products == 'all'}" onclick="updatePageWithParams();">
+        <label for="all-products">Все продукты</label>
+    </div>
+    <div class="form_radio_btn">
+        <input id="favorite-products" type="radio" name="products" value="favorite"
+               th:checked="${products == 'favorite'}" onclick="updatePageWithParams();">
+        <label for="favorite-products">Избранное</label>
+    </div>
+    <div class="form_radio_btn fake">
+        <input id="new-products-list" type="radio" name="products" value="add"
+               disabled
+               th:checked="${products == 'add'}">
+        <label for="new-products-list">Добавить список</label>
+    </div>
+</div>
+
+<div th:fragment="add_product_block">
+    <form method="post" class="df params-form jc-around wrapper nowrap">
+        <div>
+            <label for="name">Наименование</label>
+            <input required type="text" name="name" id="name"/>
+        </div>
+        <div>
+            <label for="brand">Производитель</label>
+            <input required type="text" name="brand" id="brand"/>
+        </div>
+        <div>
+            <label for="protein">Белки</label>
+            <input type="number" step="0.01" name="protein" id="protein"/>
+        </div>
+        <div>
+            <label for="fat">Жиры</label>
+            <input type="number" step="0.01" name="fat" id="fat"/>
+        </div>
+        <div>
+            <label for="carbs">Углеводы</label>
+            <input type="number" step="0.01" name="carbs" id="carbs"/>
+        </div>
+        <div>
+            <label for="fibers">Пищевые волокна</label>
+            <input type="number" step="0.01" name="fibers" id="fibers"/>
+        </div>
+        <div>
+            <label for="kkal">Ккал</label>
+            <input placeholder="Можно оставить пустым" type="number" step="0.01" name="kkal" id="kkal"/>
+        </div>
+        <div>
+            <button type="submit">Добавить продукт</button>
+        </div>
+    </form>
+</div>
+
+<div th:fragment="edit_product_block">
+    <form method="post" class="df params-form jc-around wrapper nowrap">
+        <div>
+            <label for="name">Наименование</label>
+            <input th:value="${product.getName()}" required type="text" name="name" id="name"/>
+        </div>
+        <div>
+            <label for="brand">Производитель</label>
+            <input th:value="${product.getBrand()}" required type="text" name="brand" id="brand"/>
+        </div>
+        <div>
+            <label for="protein">Белки</label>
+            <input th:value="${product.getProtein()}" type="number" step="0.01" name="protein" id="protein"/>
+        </div>
+        <div>
+            <label for="fat">Жиры</label>
+            <input th:value="${product.getFat()}" type="number" step="0.01" name="fat" id="fat"/>
+        </div>
+        <div>
+            <label for="carbs">Углеводы</label>
+            <input th:value="${product.getCarb()}" type="number" step="0.01" name="carbs" id="carbs"/>
+        </div>
+        <div>
+            <label for="fibers">Пищевые волокна</label>
+            <input th:value="${product.getFibers()}" type="number" step="0.01" name="fibers" id="fibers"/>
+        </div>
+        <div>
+            <label for="kkal">Ккал</label>
+            <input th:value="${product.getKkal()}" placeholder="Можно оставить пустым" type="number" step="0.01" name="kkal" id="kkal"/>
+        </div>
+        <div>
+            <button type="submit">Добавить продукт</button>
+        </div>
+    </form>
+</div>
+
+<div th:fragment="all-product-list" class="full"><!--  list  -->
+    <div class="list-search df pv-5px ph-10px fw-space"><!--  list-name  -->
+        <form class="search-form">
+            <input class="search-input" type="text" placeholder="Искать здесь...">
+            <button class="search-button" type="submit">
+                <img src="/img/search.svg" class="search-ico" alt="Поиск">
+            </button>
+        </form>
+    </div>
+    <div class="list-items">
+        <div class="df"><!--  list-items  -->
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+            <div th:replace="products/blocks :: list-item"></div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="my-product-list"><!--  list  -->
+    <div class="list-search df pv-5px ph-10px fw-space"><!--  list-search  -->
+        <form class="search-form">
+            <input class="search-input" type="text" placeholder="Искать здесь...">
+            <button class="search-button" type="submit">
+                <img src="/img/search.svg" class="search-ico" alt="Поиск">
+            </button>
+        </form>
+    </div>
+    <div class="list-items df"><!--  list-items  -->
+        <div th:replace="products/blocks :: my-list-item"></div>
+        <div th:replace="products/blocks :: my-list-item"></div>
+        <div th:replace="products/blocks :: my-list-item"></div>
+        <div th:replace="products/blocks :: my-list-item"></div>
+        <div th:replace="products/blocks :: my-list-item"></div>
+        <div th:replace="products/blocks :: my-list-item"></div>
+        <div th:replace="products/blocks :: my-list-item"></div>
+    </div>
+</div>
+
+<div th:fragment="my-list-item" class="df full-fb list-item pv-5px ph-10px"><!--  list-item  -->
+    <div class="fb-75 gray-p"><!--  list-item-name  -->
+        <h4>Листы для жарки для нежного куринного филе с чесноком и трав</h4>
+        <p>Maggi</p>
+    </div>
+    <div class="fb-25 df"><!--  list-item-kcal  -->
+        <select class="full-fb ta-right">
+            <option>100 гр.</option>
+            <option>Кастом порция</option>
+        </select>
+        <h2 class="full-fb ta-center">474 ккал</h2>
+    </div>
+    <div class="fb-75 df fv-center gray-p fs-small fw-space"><!--  list-item-pfc  -->
+        <p>Белки - 4.0 г.</p>
+        <p>Жиры - 38.0 г.</p>
+        <p>Углеводы - 29.0 г.</p>
+        <p>Волокна - 0.0 г.</p>
+    </div>
+    <div class="fb-25 df f-central"><!--  list-item-action  -->
+        <p><a href="#"><img src="/img/add.ico" class="action-ico" alt="Добавить в дневник"></a></p>
+        <p><a href="#"><img src="/img/edit.ico" class="action-ico" alt="Изменить"></a></p>
+        <p><a href="#"><img src="/img/delete.ico" class="action-ico" alt="Удалить"></a></p>
+    </div>
+</div>
+
+<div th:fragment="list-item" class="df full-fb list-item pv-5px ph-10px"><!--  list-item  -->
+    <div class="fb-75 gray-p"><!--  list-item-name  -->
+        <h4>Листы для жарки для нежного куринного филе с чесноком и трав</h4>
+        <p>Maggi</p>
+    </div>
+    <div class="fb-25 df"><!--  list-item-kcal  -->
+        <select class="full-fb ta-right">
+            <option>100 гр.</option>
+            <option>Кастом порция</option>
+        </select>
+        <h2 class="full-fb ta-center">474 ккал</h2>
+    </div>
+    <div class="fb-75 df fv-center gray-p fs-small fw-space"><!--  list-item-pfc  -->
+        <p>Белки - 4.0 г.</p>
+        <p>Жиры - 38.0 г.</p>
+        <p>Углеводы - 29.0 г.</p>
+        <p>Волокна - 0.0 г.</p>
+    </div>
+    <div class="fb-25 df f-central"><!--  list-item-action  -->
+        <p><a href="#"><img src="/img/add.ico" class="action-ico" alt="Добавить в дневник" ></a></p>
+    </div>
+</div>

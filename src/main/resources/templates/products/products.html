@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Продукты</title>
+    <link type="text/css" rel="stylesheet" th:href="@{../css/main.css}"/>
+    <!--    <script th:src="@{../js/jquery.min.js}"></script>-->
+</head>
+<body>
+<div class="wrapper">
+    <div th:replace="body/blocks :: header"></div>
+    <div class="content df jc-around">
+        <div class="menu-block">
+            <div th:replace="products/blocks :: products-menu"></div>
+        </div>
+        <div class="list-block">
+            <div th:replace="products/blocks :: all-product-list"></div>
+        </div>
+        <div class="param-block">
+            <div th:replace="products/blocks :: add_product_block"></div>
+        </div>
+    </div>
+    <div th:replace="body/blocks :: footer"></div>
+</div>
+</body>
+</html>

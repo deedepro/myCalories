@@ -1,0 +1,122 @@
+<div th:fragment="mealtime-menu">
+    <div class="form_radio_btn">
+        <input id="radio-breakfast" type="radio" name="mealtime" value="breakfast"
+               th:checked="${mealtime == 'breakfast'}"
+               onclick="updatePageWithParams();">
+        <label for="radio-breakfast">Завтрак</label>
+    </div>
+    <div class="form_radio_btn">
+        <input id="radio-lunch" type="radio" name="mealtime" value="lunch"
+               th:checked="${mealtime == 'lunch'}" onclick="updatePageWithParams();">
+        <label for="radio-lunch">Обед</label>
+    </div>
+    <div class="form_radio_btn">
+        <input id="radio-dinner" type="radio" name="mealtime" value="dinner"
+               th:checked="${mealtime == 'dinner'}" onclick="updatePageWithParams();">
+        <label for="radio-dinner">Ужин</label>
+    </div>
+    <div class="form_radio_btn">
+        <input id="radio-snack" type="radio" name="mealtime" value="snack"
+               th:checked="${mealtime == 'snack'}" onclick="updatePageWithParams();">
+        <label for="radio-snack">Перекус</label>
+    </div>
+    <div class="form_radio_btn">
+        <input id="radio-all" type="radio" name="mealtime" value="all"
+               th:checked="${mealtime == 'all'}" onclick="updatePageWithParams();">
+        <label for="radio-all">Все</label>
+    </div>
+    <div class="form_radio_btn fake">
+        <input id="radio-add" type="radio" name="mealtime" value="add"
+               disabled
+               th:checked="${mealtime == 'add'}">
+        <label for="radio-add">Добавить свой</label>
+    </div>
+</div>
+
+<!--<div th:fragment="diary-modal" class="modal">-->
+<!--    &lt;!&ndash; Модальное окно &ndash;&gt;-->
+<!--    <div class="modal__content">-->
+<!--        <button class="modal__close-button" onclick="hideAddDiaryModel()">-->
+<!--            <img th:src="@{../img/close.svg}" width="18" alt="">-->
+<!--        </button>-->
+<!--        &lt;!&ndash; Контент модального окна &ndash;&gt;-->
+<!--        <h1 class="modal__title">Добавление продукта</h1>-->
+<!--        <form action="/" method="post">-->
+<!--            <input type="hidden" id="select-food-id">-->
+<!--            <label for="weight">Вес</label>-->
+<!--            <input required id="weight" type="number">-->
+<!--            <input id="modal-submit-button" type="submit" value="Добавить" onclick="buttonToDiary(); updatePageWithParams()">-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+
+<div th:fragment="diary-table">
+    <div class="list-search df pv-5px ph-10px fw-space"><!--  list-search  -->
+        <form class="search-form">
+            <input class="search-input" type="text" placeholder="Искать здесь...">
+            <button class="search-button" type="submit">
+                <img src="/img/search.svg" class="search-ico" alt="Поиск">
+            </button>
+        </form>
+    </div>
+    <div class="list-items df">
+        <div th:replace="diary/blocks :: list-item"></div>
+    </div>
+</div>
+
+<div th:fragment="list-item" th:each="entry : ${entries}" class="df full-fb list-item pv-5px ph-10px">
+    <div class="fb-75 gray-p"><!--  list-item-name  -->
+        <h4 th:text="${entry.getProductView().getName()}"></h4>
+        <p th:text="${entry.getProductView().getBrand()}"></p>
+    </div>
+    <div class="fb-25 df jc-around gray-p"><!--  list-item-kcal  -->
+        <!--TODO: вместо граммов могут быть мл-->
+        <p th:text="${entry.getWeight()}"></p>
+        <p th:text=" гр."></p>
+        <h2 class="full-fb ta-center" th:text="${entry.getProductView().getKkal()} + ' ккал.'"></h2>
+    </div>
+    <div class="fb-75 df fv-center gray-p fs-small fw-space"><!--  list-item-pfc  -->
+        <p th:text="'Белки - ' + ${entry.getProductView().getProtein()} + ' г.'"></p>
+        <p th:text="'Жиры - ' + ${entry.getProductView().getFat()} + ' г.'"></p>
+        <p th:text="'Углеводы - ' + ${entry.getProductView().getCarb()} + ' г.'"></p>
+        <p th:text="'Волокна - ' + ${entry.getProductView().getFibers()} + ' г.'"></p>
+    </div>
+    <div class="fb-25 df f-central"><!--  list-item-action  -->
+        <p><a href="#"><img src="/img/edit.ico" class="action-ico" alt="Изменить"></a></p>
+        <p><a th:href="${entry.getId()} + '#'"><img src="/img/delete.ico" class="action-ico" alt="Удалить"></a></p>
+    </div>
+</div>
+
+<div th:fragment="edit_diary_entry_block">
+    <form method="post" class="df params-form jc-around wrapper nowrap">
+        <div>
+            <label for="name">Наименование</label>
+            <input required type="text" name="name" id="name"/>
+        </div>
+        <div>
+            <label for="weight">Вес</label>
+            <input required type="number" name="weight" id="weight"/>
+        </div>
+        <div>
+            <label for="date">День</label>
+            <input type="date" name="date" id="date"/>
+        </div>
+        <div>
+            <label for="mealtime">Прием пищи</label>
+            <input list="mealtime-list" name="mealtime" id="mealtime">
+            <datalist id="mealtime-list">
+                <option value="Завтрак"></option>
+                <option value="Обед"></option>
+                <option value="Ужин"></option>
+                <option value="Перекус"></option>
+                <option disabled value="Свой.."></option>
+            </datalist>
+        </div>
+        <div>
+            <button type="submit">Изменить</button>
+        </div>
+        <div>
+            <button type="submit">Удалить</button>
+        </div>
+    </form>
+</div>

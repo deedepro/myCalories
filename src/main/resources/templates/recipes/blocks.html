@@ -1,0 +1,85 @@
+<div th:fragment="recipe-menu">
+    <div class="form_radio_btn">
+        <input id="my-recipes" type="radio" name="recipes" value="my"
+               th:checked="${recipes == 'my'}"
+               onclick="updatePageWithParams();">
+        <label for="my-recipes">Мои рецепты</label>
+    </div>
+    <div class="form_radio_btn">
+        <input id="all-recipes" type="radio" name="recipes" value="all"
+               th:checked="${recipes == 'all'}" onclick="updatePageWithParams();">
+        <label for="all-recipes">Все рецепты</label>
+    </div>
+    <div class="form_radio_btn">
+        <input id="favorite-recipes" type="radio" name="recipes" value="favorite"
+               th:checked="${recipes == 'favorite'}" onclick="updatePageWithParams();">
+        <label for="favorite-recipes">Избранное</label>
+    </div>
+    <div class="form_radio_btn fake">
+        <input id="new-recipes-list" type="radio" name="recipes" value="add"
+               disabled
+               th:checked="${recipes == 'add'}">
+        <label for="new-recipes-list">Добавить список</label>
+    </div>
+</div>
+
+<div th:fragment="all-recipe-list" class="full"><!--  list  -->
+    <div class="list-search df pv-5px ph-10px fw-space"><!--  list-name  -->
+        <form class="search-form">
+            <input class="search-input" type="text" placeholder="Искать здесь...">
+            <button class="search-button" type="submit">
+                <img src="/img/search.svg" class="search-ico" alt="Поиск">
+            </button>
+        </form>
+    </div>
+    <div class="list-items df"><!--  list-items  -->
+        <div th:replace="recipes/blocks :: list-item"></div>
+        <div th:replace="recipes/blocks :: list-item"></div>
+        <div th:replace="recipes/blocks :: list-item"></div>
+        <div th:replace="recipes/blocks :: list-item"></div>
+        <div th:replace="recipes/blocks :: list-item"></div>
+        <div th:replace="recipes/blocks :: list-item"></div>
+        <div th:replace="recipes/blocks :: list-item"></div>
+        <div th:replace="recipes/blocks :: list-item"></div>
+        <div th:replace="recipes/blocks :: list-item"></div>
+    </div>
+</div>
+
+<div th:fragment="edit_recipe_block">
+    <form action="/recipes/add" method="post" class="df params-form jc-around wrapper nowrap">
+        <div>
+            <label for="name">Наименование</label>
+            <input required type="text" name="name" id="name"/>
+        </div>
+        <div>
+            <label for="weight">Готовый вес</label>
+            <input placeholder="Можно оставить пустым" type="number" name="weight" id="weight"/>
+        </div>
+        <div>
+            <button type="submit">Добавить рецепт</button>
+        </div>
+    </form>
+</div>
+
+<div th:fragment="list-item" class="df full-fb list-item pv-5px ph-10px"><!--  list-item  -->
+    <div class="fb-75 gray-p"><!--  list-item-name  -->
+        <h4>Пицца</h4>
+        <p>Домашняя</p>
+    </div>
+    <div class="fb-25 df"><!--  list-item-kcal  -->
+        <select class="full-fb ta-right">
+            <option>100 гр.</option>
+            <option>Кастом порция</option>
+        </select>
+        <h2 class="full-fb ta-center">474 ккал</h2>
+    </div>
+    <div class="fb-75 df fv-center gray-p fs-small fw-space"><!--  list-item-pfc  -->
+        <p>Белки - 4.0 г.</p>
+        <p>Жиры - 38.0 г.</p>
+        <p>Углеводы - 29.0 г.</p>
+        <p>Волокна - 0.0 г.</p>
+    </div>
+    <div class="fb-25 df f-central"><!--  list-item-action  -->
+        <p><a href="#"><img src="/img/add.ico" class="action-ico" alt="Добавить в дневник" ></a></p>
+    </div>
+</div>
