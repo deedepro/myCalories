@@ -24,4 +24,6 @@ public interface ProductsService {
     ProductView makeProductView(Long productId);
 
     ProductView createProductView(Product products);
+
+    boolean isUserProduct(Product product);
 }

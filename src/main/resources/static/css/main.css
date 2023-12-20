@@ -129,6 +129,10 @@ body {
     padding: 0 1rem;
 }
 
+.h-full{
+    height: 100%;
+}
+
 /* Отступы */
 .pv-5px {
     padding-top: 5px;
@@ -249,12 +253,20 @@ body {
     height: 100%;
     width: 400px;
 }
-
-.params-form {
-    padding: 20px;
-    height: 400px;
+.param-container{
+    max-height: 500px;
+    min-height: 368px;
     border-radius: 6px;
     border: 1px solid black;
+}
+
+.param-part{
+    padding: 20px;
+}
+
+.params-form div{
+    padding: 5px 0;
+    height: 40px;
 }
 
 .params-form label {
@@ -272,6 +284,10 @@ body {
 .params-form button {
     width: 100%;
     height: 40px;
+}
+
+.second-form{
+    padding-top: 10px;
 }
 
 /* Другие блоки */

@@ -12,7 +12,9 @@ public class ProductView {
     @NonNull
     private Long id;
     private String name, brand;
-    private Double protein, fat, carb, fibers, kkal;
+    private Double protein, fat, carb, fibers, kcal;
+
+    private boolean userProduct;
 
     public ProductView(@NonNull Long id, String name, String brand) {
         this.id = id;
@@ -25,6 +27,6 @@ public class ProductView {
         this.fat = fat;
         this.carb = carb;
         this.fibers = fibers;
-        this.kkal = kkal;
+        this.kcal = kkal;
     }
 }

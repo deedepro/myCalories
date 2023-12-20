@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Продукты</title>
-    <link type="text/css" rel="stylesheet" th:href="@{../css/main.css}"/>
+    <link type="text/css" rel="stylesheet" href="/css/main.css"/>
     <!--    <script th:src="@{../js/jquery.min.js}"></script>-->
 </head>
 <body>
@@ -19,7 +19,14 @@
             <div th:replace="products/blocks :: all-product-list"></div>
         </div>
         <div class="param-block">
-            <div th:replace="products/blocks :: add_product_block"></div>
+            <div class="param-container">
+                <div th:if="${edit}" class="h-full">
+                    <div th:replace="products/blocks :: edit_product_block"></div>
+                </div>
+                <div th:unless="${edit}" class="h-full">
+                    <div th:replace="products/blocks :: add_product_block"></div>
+                </div>
+            </div>
         </div>
     </div>
     <div th:replace="body/blocks :: footer"></div>

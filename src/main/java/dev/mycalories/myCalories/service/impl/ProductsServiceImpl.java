@@ -64,7 +64,6 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public List<ProductView> collectMyProducts() {
         User currentUser = userService.getCurrentUser();
-        Assert.isTrue(currentUser != null, "Не найден текущий пользователь");
         Iterable<Product> allProducts = productsRepository.findAllByUser(currentUser);
         return createProductViews(allProducts);
     }
@@ -72,28 +71,30 @@ public class ProductsServiceImpl implements ProductsService {
     @Override
     public ProductView makeProductView(Long productId) {
         Product product = productsRepository.findById(productId).orElse(null);
-        return createProductViews(Collections.singletonList(product)).stream().findFirst().orElse(null);
+        return createProductView(product);
     }
 
+    /**
+     * Создание списка видимых образов продуктов
+     * @param products продукты
+     * @return видимые образы продуктов
+     */
     private List<ProductView> createProductViews(Iterable<Product> products) {
         Iterator<Product> iterator = products.iterator();
         List<ProductView> result = new ArrayList<>();
         while (iterator.hasNext()) {
             Product product = iterator.next();
-            ProductView productView = new ProductView(product.getId(), product.getName(), product.getBrand());
-            EnergyValue energyValue = product.getEnergyValue();
-            productView.setEnergyValues(
-                    energyValue.getProtein(),
-                    energyValue.getFat(),
-                    energyValue.getCarbohydrates(),
-                    energyValue.getAlimentaryFiber(),
-                    energyValue.getKilocalorie()
-            );
+            ProductView productView = createProductView(product);
             result.add(productView);
         }
         return result;
     }
 
+    /**
+     * Создание видимого образа продукта
+     * @param product продукт
+     * @return видимый образ продукта
+     */
     @Override
     public ProductView createProductView(Product product) {
         ProductView productView = new ProductView(product.getId(), product.getName(), product.getBrand());
@@ -105,11 +106,23 @@ public class ProductsServiceImpl implements ProductsService {
                 energyValue.getAlimentaryFiber(),
                 energyValue.getKilocalorie()
         );
+        productView.setUserProduct(isUserProduct(product));
         return productView;
     }
 
+    /**
+     * Проверка принадлежности продукта текущему пользователю
+     * @param product продукт
+     * @return истина, если создатель продукта - текущий пользователь.
+     */
+    @Override
+    public boolean isUserProduct(Product product) {
+        User currentUser = userService.getCurrentUser();
+        return product.getUser().getId().equals(currentUser.getId());
+    }
 
-        private Product makeProduct(String name, String brand, User user) {
+
+    private Product makeProduct(String name, String brand, User user) {
         boolean isProductExist = checkProductExist(name, brand, user);
         if (isProductExist) {
             return null;

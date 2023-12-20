@@ -11,8 +11,6 @@ public interface ProductsRepository
 //        extends CrudRepository<Product, Long> {
         extends JpaRepository<Product, Long> {
     Product findTopByOrderByIdDesc();
-
-
     Iterable<Product> findAllByUser(User user);
 
     boolean existsByNameAndBrandAndUser(String name, String brand, User User);
