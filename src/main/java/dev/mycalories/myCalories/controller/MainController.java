@@ -43,11 +43,6 @@ public class MainController {
         return "registration";
     }
 
-    @GetMapping("/test")
-    String showTestPage(Model model){
-        return "test";
-    }
-
     @PostMapping("/registration")
     String register(@RequestParam String username,
                     @RequestParam String password,
