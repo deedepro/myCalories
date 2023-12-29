@@ -1,25 +1,26 @@
 <div th:fragment="products-menu">
     <div class="form_radio_btn">
-        <input id="my-products" type="radio" name="products" value="my"
-               th:checked="${products == 'my'}"
-               onclick="updatePageWithParams();">
-        <label for="my-products">Мои продукты</label>
+        <input id="all-products" type="radio" name="products" value="all"
+               th:checked="${collection == 'all'}"
+               onclick="window.location='/products';">
+        <label for="all-products">Все продукты</label>
     </div>
     <div class="form_radio_btn">
-        <input id="all-products" type="radio" name="products" value="all"
-               th:checked="${products == 'all'}" onclick="updatePageWithParams();">
-        <label for="all-products">Все продукты</label>
+        <input id="my-products" type="radio" name="products" value="my"
+               th:checked="${collection == 'my'}"
+               onclick="window.location='/products/my';">
+        <label for="my-products">Мои продукты</label>
     </div>
     <div class="form_radio_btn">
         <input id="favorite-products" type="radio" name="products" value="favorite"
                disabled
-               th:checked="${products == 'favorite'}" onclick="updatePageWithParams();">
+               th:checked="${collection == 'favorite'}" onclick="updatePageWithParams();">
         <label for="favorite-products">Избранное</label>
     </div>
     <div class="form_radio_btn fake">
         <input id="new-products-list" type="radio" name="products" value="add"
                disabled
-               th:checked="${products == 'add'}">
+               th:checked="${collection == 'add'}">
         <label for="new-products-list">Добавить список</label>
     </div>
 </div>

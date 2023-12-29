@@ -42,6 +42,20 @@ public class ProductsController {
     String showProductsPage(Model model){
         List<ProductView> products = productsService.collectAllProducts();
         model.addAttribute("products", products);
+        model.addAttribute("collection", "all");
+        return "products/products";
+    }
+
+    /**
+     * Обработчик события открытия вкладки страницы "Мои продукты"
+     * @param model параметры страницы
+     * @return открытия вкладки страницы "Мои продукты"
+     */
+    @GetMapping("/products/my")
+    String showMyProductsPage(Model model){
+        List<ProductView> products = productsService.collectMyProducts();
+        model.addAttribute("products", products);
+        model.addAttribute("collection", "my");
         return "products/products";
     }
 
