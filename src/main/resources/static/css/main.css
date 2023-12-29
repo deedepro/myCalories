@@ -274,11 +274,20 @@ body {
     padding-top: 5px;
 }
 
-.params-form input {
+.params-form input{
     border-radius: 6px;
     float: right;
     height: 30px;
     width: 200px;
+    text-align: right;
+}
+
+.params-form select{
+    border-radius: 6px;
+    float: right;
+    height: 30px;
+    width: 200px;
+    text-align: right;
 }
 
 .params-form button {
@@ -300,4 +309,8 @@ body {
 .block-border{
     border: 1px solid black;
     border-radius: 6px;
+}
+
+.diary-date{
+    height: 30px;
 }

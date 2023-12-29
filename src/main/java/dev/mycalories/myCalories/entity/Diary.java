@@ -23,5 +23,5 @@ public class Diary {
     @ManyToOne
     private Food food;
     @NonNull
-    private Double weight;
+    private int weight;
 }

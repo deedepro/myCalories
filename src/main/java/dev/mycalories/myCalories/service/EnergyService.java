@@ -15,7 +15,7 @@ public interface EnergyService {
                                  String fat,
                                  String carbs,
                                  String fibers,
-                                 String kkal);
+                                 String kcal);
 
-    Double calcKkal(EnergyValue energyValue);
+    Double calcKcal(EnergyValue energyValue);
 }

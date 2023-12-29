@@ -6,7 +6,9 @@
     <meta charset="UTF-8">
     <title>Продукты</title>
     <link type="text/css" rel="stylesheet" href="/css/main.css"/>
-    <!--    <script th:src="@{../js/jquery.min.js}"></script>-->
+    <link type="text/css" rel="stylesheet" href="/css/widgets/modal.css"/>
+    <script th:src="@{../js/jquery.min.js}"></script>
+    <script th:src="@{../js/products/scripts.js}"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -30,6 +32,7 @@
         </div>
     </div>
     <div th:replace="body/blocks :: footer"></div>
+    <div th:replace="products/blocks :: diary-modal"></div>
 </div>
 </body>
 </html>

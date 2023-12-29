@@ -22,11 +22,11 @@ public class ProductView {
         this.brand = brand;
     }
 
-    public void setEnergyValues(Double protein, Double fat, Double carb, Double fibers, Double kkal) {
+    public void setEnergyValues(Double protein, Double fat, Double carb, Double fibers, Double kcal) {
         this.protein = protein;
         this.fat = fat;
         this.carb = carb;
         this.fibers = fibers;
-        this.kcal = kkal;
+        this.kcal = kcal;
     }
 }

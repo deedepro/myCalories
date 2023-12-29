@@ -17,13 +17,14 @@ public interface DiaryService {
 
     void deleteEntry(long id);
 
-    void addProduct(long id, int weight, Date date, Mealtime mealtime);
+    void addEntry(long id, int weight, Date date, Mealtime mealtime);
 
-    Double calcDayKkal(Date currentDate);
+    Double calcDayKcal(Date currentDate);
+    EntryView makeEntryView(Long productId);
 
     List<EntryView> collectAllEntriesByDate(Date currentDate);
 
     List<EntryView> collectAllEntriesByDateAndMealtime(Date currentDate, Mealtime mealtime);
 
-    void editDiary(long id, Double weight);
+    void editEntry(long inputId, int inputWeight, Date inputDate, Mealtime mealtime);
 }

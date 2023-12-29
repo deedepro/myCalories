@@ -15,13 +15,13 @@ public class EnergyServiceImpl implements EnergyService {
     private EnergyRepository energyRepository;
 
     @Override
-    public EnergyValue createEnergyValue(String protein, String fat, String carbs, String fibers, String kkal) {
+    public EnergyValue createEnergyValue(String protein, String fat, String carbs, String fibers, String kcal) {
         EnergyValue energyValue = new EnergyValue();
-        return editEnergyValues(energyValue, protein, fat, carbs, fibers, kkal);
+        return editEnergyValues(energyValue, protein, fat, carbs, fibers, kcal);
     }
 
     @Override
-    public Double calcKkal(EnergyValue energyValue) {
+    public Double calcKcal(EnergyValue energyValue) {
         BigDecimal result = BigDecimal.valueOf(
                 (energyValue.getProtein() + energyValue.getCarbohydrates()) * 4
                         + energyValue.getFat() * 9 + energyValue.getAlimentaryFiber() * 2);
@@ -33,14 +33,14 @@ public class EnergyServiceImpl implements EnergyService {
     }
 
     @Override
-    public EnergyValue editEnergyValues(EnergyValue energyValue, String protein, String fat, String carbs, String fibers, String kkal) {
+    public EnergyValue editEnergyValues(EnergyValue energyValue, String protein, String fat, String carbs, String fibers, String kcal) {
         energyValue.setProtein(nonNullParam(protein));
         energyValue.setFat(nonNullParam(fat));
         energyValue.setCarbohydrates(nonNullParam(carbs));
         energyValue.setAlimentaryFiber(nonNullParam(fibers));
-        energyValue.setKilocalorie(kkal.isEmpty()
-                ? calcKkal(energyValue)
-                : Double.parseDouble(kkal));
+        energyValue.setKilocalorie(kcal.isEmpty()
+                ? calcKcal(energyValue)
+                : Double.parseDouble(kcal));
         return energyValue;
     }
 }

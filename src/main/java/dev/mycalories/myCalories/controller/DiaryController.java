@@ -1,21 +1,18 @@
 package dev.mycalories.myCalories.controller;
 
 import dev.mycalories.myCalories.dto.EntryView;
-import dev.mycalories.myCalories.dto.ProductView;
 import dev.mycalories.myCalories.entity.Mealtime;
 import dev.mycalories.myCalories.service.DiaryService;
 import dev.mycalories.myCalories.service.MealtimeService;
-import dev.mycalories.myCalories.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -24,10 +21,9 @@ import java.util.List;
 @Controller
 public class DiaryController {
     @Autowired
-    public DiaryController(DiaryService diaryService, MealtimeService mealtimeService, ProductsService productsService) {
+    public DiaryController(DiaryService diaryService, MealtimeService mealtimeService) {
         this.diaryService = diaryService;
         this.mealtimeService = mealtimeService;
-        this.productsService = productsService;
     }
 
     /**
@@ -41,43 +37,26 @@ public class DiaryController {
     private final MealtimeService mealtimeService;
 
     /**
-     * TODO: попробовать избавиться от него
-     * Сервис для работы с моделью продукта
-     */
-    private final ProductsService productsService;
-
-    /**
      * Подготовка параметров страницы дневника
+     *
      * @param mealtime модель приема пищи
-     * @param date дата
-     * @param model параметры страницы
+     * @param date     дата
+     * @param model    параметры страницы
      * @return ссылка на html шаблон страницы дневника
      */
     private String prepareDiaryPage(Mealtime mealtime, Date date, Model model) {
         if (date == null) {
             date = new Date(System.currentTimeMillis());
         }
-        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-        String dateValue = df.format(date);
-        model.addAttribute("date", dateValue);
-
-        if (mealtime == null) {
-            model.addAttribute("mealtime", "all");
-        } else {
-            model.addAttribute("mealtime", mealtime.getName());
-        }
-
-        Double kkal = diaryService.calcDayKkal(date);
-        model.addAttribute("kkal", kkal);
-
-        List<ProductView> allProducts = productsService.collectAllProducts();
-        model.addAttribute("products", allProducts);
+        model.addAttribute("dateAttr", date);
 
         List<EntryView> entries;
-        if (mealtime != null) {
-            entries = diaryService.collectAllEntriesByDateAndMealtime(date, mealtime);
-        } else {
+        if (mealtime == null) {
+            model.addAttribute("mealtimeAttr", "all");
             entries = diaryService.collectAllEntriesByDate(date);
+        } else {
+            model.addAttribute("mealtimeAttr", mealtime.getName());
+            entries = diaryService.collectAllEntriesByDateAndMealtime(date, mealtime);
         }
         model.addAttribute("entries", entries);
 
@@ -86,99 +65,99 @@ public class DiaryController {
 
     /**
      * Показать страницу дневника с параметрами, определенными системой
+     *
      * @param model параметры страницы
      * @return обновление страницы дневника
      */
     @GetMapping("/diary")
-    String showStartDiaryPage(Model model) {
+    String showDiaryPage(Model model) {
         Mealtime mealtime = mealtimeService.calcMealtimeByCurrentTime();
-        Date date = new Date(System.currentTimeMillis());
-        return prepareDiaryPage(mealtime, date, model);
+        return prepareDiaryPage(mealtime, null, model);
     }
 
     /**
      * Показать страницу дневника с выбранными пользователем параметрами
-     * @param dateValue значение выбранной пользователем даты в формате строки
-     * @param mealtimeValue наименование выбранного пользователем приема пищи
-     * @param model параметры страницы
+     *
+     * @param inputDate     значение выбранной пользователем даты в формате строки
+     * @param inputMealtime наименование выбранного пользователем приема пищи
+     * @param model         параметры страницы
      * @return обновление страницы дневника
      */
     @PostMapping("/diary")
-    public String showDiaryPage(@RequestParam(value = "select-date") String dateValue,
-                                @RequestParam(value = "select-mealtime") String mealtimeValue,
+    public String showDiaryParamsPage(@RequestParam(value = "inputDate") Date inputDate,
+                                @RequestParam(value = "inputMealtime") String inputMealtime,
                                 Model model) {
-        Mealtime mealtime = null;
-        if (mealtimeValue != null) {
-            mealtime = mealtimeService.findMealtimeByName(mealtimeValue);
-        }
-
-        Date date = mapDate(dateValue);
-
-        return prepareDiaryPage(mealtime, date, model);
-    }
-
-    /**
-     * //TODO попробовать избавится
-     * Конвертер даты из параметра строки в параметр даты
-     * @param dateValue значение даты в формате строки
-     * @return значение даты в формате даты
-     */
-    private Date mapDate(String dateValue) {
-        Date date = null;
-        if (!dateValue.isEmpty()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            LocalDate localDate = LocalDate.parse(dateValue, formatter);
-            date = Date.valueOf(localDate);
-        }
-        return date;
+        Mealtime mealtime = mealtimeService.findMealtimeByName(inputMealtime);
+        return prepareDiaryPage(mealtime, inputDate, model);
     }
 
     /**
      * Добавить запись в дневник
-     * @param id идентификатор выбранного продукта
-     * @param mealtimeParam наименование выбранного пользователем приема пищи
-     * @param dateParam выбранная пользователем дата в формате строки
-     * @param weight указанный пользователем вес
+     *
+     * @param inputId       идентификатор выбранного продукта
+     * @param inputMealtime наименование выбранного пользователем приема пищи
+     * @param inputDate     выбранная пользователем дата в формате строки
+     * @param inputWeight   указанный пользователем вес
+     * @param model         параметры страницы
      * @return обновление страницы дневника
      */
-    @PostMapping("/diary/add/{id}")
-    String addFoodToDiary(@PathVariable(value = "id") long id,
-                          @RequestParam(value = "mealtime") String mealtimeParam,
-                          @RequestParam(value = "date") String dateParam,
-                          @RequestParam(value = "weight") int weight,
+    @PostMapping("/diary/add")
+    String addFoodToDiary(@RequestParam(value = "inputId") long inputId,
+                          @RequestParam(value = "inputMealtime") String inputMealtime,
+                          @RequestParam(value = "inputDate") Date inputDate,
+                          @RequestParam(value = "inputWeight") int inputWeight,
                           Model model) {
-        Mealtime mealtime = mealtimeService.findMealtimeByName(mealtimeParam);
-        Date date = mapDate(dateParam);
-        diaryService.addProduct(id, weight, date, mealtime);
-        String resultMessage = "Успешно добавлено";
-        model.addAttribute("message", resultMessage);
-        return "redirect:/diary";
+        Mealtime mealtime = mealtimeService.findMealtimeByName(inputMealtime);
+        diaryService.addEntry(inputId, inputWeight, inputDate, mealtime);
+        return "redirect:/products";
     }
 
     /**
-     * Изменить запись в дневнике
-     * @param id идентификатор изменяемой записи
-     * @param weight текущий вес в записи
-     * @param model параметры страницы
-     * @return обновление страницы дневника
+     * Обработчик события открытия страницы "Дневник" в режиме изменений записи дневника
+     *
+     * @param inputId       идентификатор выбранного продукта
+     * @param model         параметры страницы
+     * @return открытие страницы "Дневник"
      */
-    @PostMapping("/diary/edit/{id}")
-    String editDiaryEntry(@PathVariable(value = "id") long id,
-                          @RequestParam(value = "weight") double weight,
-                          Model model) {
-        diaryService.editDiary(id, weight);
+    @GetMapping("/diary/edit/{inputId}")
+    String showEditPage(@PathVariable(value = "inputId") long inputId, Model model) {
+        model.addAttribute("edit",true);
+        EntryView editEntry = diaryService.makeEntryView(inputId);
+        model.addAttribute("entry", editEntry);
+        return showDiaryPage(model);
+    }
+
+    /**
+     * Обработчик события изменения записи дневника в системе
+     *
+     * @param inputId       идентификатор выбранного продукта
+     * @param inputMealtime наименование выбранного пользователем приема пищи
+     * @param inputDate     выбранная пользователем дата в формате строки
+     * @param inputWeight   указанный пользователем вес
+     * @param model         параметры страницы
+     * @return переадресация на страницу "Дневника"
+     */
+    @PostMapping("/diary/edit")
+    String editEntry(@RequestParam(value = "inputId") long inputId,
+                     @RequestParam(value = "inputMealtime") String inputMealtime,
+                     @RequestParam(value = "inputDate") Date inputDate,
+                     @RequestParam(value = "inputWeight") int inputWeight,
+                     Model model) {
+        Mealtime mealtime = mealtimeService.findMealtimeByName(inputMealtime);
+        diaryService.editEntry(inputId, inputWeight, inputDate, mealtime);
         return "redirect:/diary";
     }
 
     /**
      * Удалить запись из дневника
-     * @param id идентификатор удаляемой записи
+     *
+     * @param id    идентификатор удаляемой записи
      * @param model параметры страницы
      * @return обновление страницы дневника
      */
-    @PostMapping("/diary/del/{id}")
-    String deleteEntry(@PathVariable(value = "id") long id,
-                            Model model) {
+    @GetMapping("/diary/del/{inputId}")
+    String deleteEntry(@PathVariable(value = "inputId") long id,
+                       Model model) {
         diaryService.deleteEntry(id);
         return "redirect:/diary";
     }

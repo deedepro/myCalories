@@ -41,27 +41,39 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public void addProduct(long id, int weight, Date date, Mealtime mealtime) {
+    public void addEntry(long id, int weight, Date date, Mealtime mealtime) {
         Product product = productsService.findProduct(id);
         Food food = foodService.findFood(product);
-        Double weightValue = Double.parseDouble(String.valueOf(weight));
-        Diary diary = new Diary(date, mealtime, food, weightValue);
+        Diary diary = new Diary(date, mealtime, food, weight);
         diaryRepository.save(diary);
     }
 
     @Override
-    public Double calcDayKkal(Date currentDate) {
+    public Double calcDayKcal(Date currentDate) {
         List<Diary> dayEntries = findDayEntries(currentDate);
         double result = 0.0;
         for (Diary dayEntry : dayEntries) {
             Product product = dayEntry.getFood().getProduct();
             if (product != null) {
                 EnergyValue energyValue = product.getEnergyValue();
-                double kkal = energyValue.getKilocalorie() * dayEntry.getWeight() / 100;
-                result = result + kkal;
+                double kcal = energyValue.getKilocalorie() * dayEntry.getWeight() / 100;
+                result = result + kcal;
             }
         }
         return result;
+    }
+
+    @Override
+    public EntryView makeEntryView(Long entryId) {
+        Diary diary = findDiary(entryId);
+        EntryView entryView = new EntryView();
+        entryView.setId(diary.getId());
+        entryView.setWeight(diary.getWeight());
+        entryView.setMealtime(diary.getMealtime().getName());
+        entryView.setDate(diary.getDate());
+        ProductView productView = productsService.createProductView(diary.getFood().getProduct());
+        entryView.setProductView(productView);
+        return entryView;
     }
 
     @Override
@@ -77,10 +89,12 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public void editDiary(long id, Double weight) {
-        Diary diary = findDiary(id);
+    public void editEntry(long inputId, int inputWeight, Date inputDate, Mealtime mealtime){
+        Diary diary = findDiary(inputId);
         if (diary != null) {
-            diary.setWeight(weight);
+            diary.setWeight(inputWeight);
+            diary.setDate(inputDate);
+            diary.setMealtime(mealtime);
             diaryRepository.save(diary);
         }
     }
@@ -88,11 +102,7 @@ public class DiaryServiceImpl implements DiaryService {
     private List<EntryView> createEntryViews(List<Diary> allByDate) {
         List<EntryView> result = new ArrayList<>();
         for (Diary diary : allByDate) {
-            EntryView entryView = new EntryView();
-            entryView.setId(diary.getId());
-            entryView.setWeight(diary.getWeight());
-            ProductView productView = productsService.createProductView(diary.getFood().getProduct());
-            entryView.setProductView(productView);
+            EntryView entryView = makeEntryView(diary.getId());
             result.add(entryView);
         }
         return result;

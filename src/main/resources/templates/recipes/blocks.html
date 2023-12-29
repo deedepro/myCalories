@@ -1,18 +1,17 @@
 <div th:fragment="recipe-menu">
     <div class="form_radio_btn">
         <input id="my-recipes" type="radio" name="recipes" value="my"
-               th:checked="${recipes == 'my'}"
-               onclick="updatePageWithParams();">
+               th:checked="${recipes == 'my'}">
         <label for="my-recipes">Мои рецепты</label>
     </div>
     <div class="form_radio_btn">
         <input id="all-recipes" type="radio" name="recipes" value="all"
-               th:checked="${recipes == 'all'}" onclick="updatePageWithParams();">
+               th:checked="${recipes == 'all'}" >
         <label for="all-recipes">Все рецепты</label>
     </div>
     <div class="form_radio_btn">
         <input id="favorite-recipes" type="radio" name="recipes" value="favorite"
-               th:checked="${recipes == 'favorite'}" onclick="updatePageWithParams();">
+               th:checked="${recipes == 'favorite'}" >
         <label for="favorite-recipes">Избранное</label>
     </div>
     <div class="form_radio_btn fake">

@@ -66,7 +66,7 @@
 </div>
 
 <div th:fragment="edit_product_block" class="df f-central h-full">
-    <div class="df nowrap param-part">
+    <div class="df nowrap full-fb param-part">
         <div class="full-fb">
             <form th:action="'/products/edit/' + ${product.getId()}" method="post" class="params-form">
                 <div>
@@ -124,78 +124,9 @@
     <div class="list-items">
         <div class="df"><!--  list-items  -->
             <div th:replace="products/blocks :: list-item"></div>
-<!--            <div th:replace="products/blocks :: list-item"></div>-->
         </div>
     </div>
 </div>
-
-<div th:fragment="my-product-list"><!--  list  -->
-    <div class="list-search df pv-5px ph-10px fw-space"><!--  list-search  -->
-        <form class="search-form">
-            <input class="search-input" type="text" placeholder="Искать здесь...">
-            <button class="search-button" type="submit">
-                <img src="/img/search.svg" class="search-ico" alt="Поиск">
-            </button>
-        </form>
-    </div>
-    <div class="list-items df"><!--  list-items  -->
-        <div th:replace="products/blocks :: my-list-item"></div>
-        <div th:replace="products/blocks :: my-list-item"></div>
-        <div th:replace="products/blocks :: my-list-item"></div>
-        <div th:replace="products/blocks :: my-list-item"></div>
-        <div th:replace="products/blocks :: my-list-item"></div>
-        <div th:replace="products/blocks :: my-list-item"></div>
-        <div th:replace="products/blocks :: my-list-item"></div>
-    </div>
-</div>
-
-<div th:fragment="my-list-item" class="df full-fb list-item pv-5px ph-10px"><!--  list-item  -->
-    <div class="fb-75 gray-p"><!--  list-item-name  -->
-        <h4>Листы для жарки для нежного куринного филе с чесноком и трав</h4>
-        <p>Maggi</p>
-    </div>
-    <div class="fb-25 df"><!--  list-item-kcal  -->
-        <select class="full-fb ta-right">
-            <option>100 гр.</option>
-            <option>Кастом порция</option>
-        </select>
-        <h2 class="full-fb ta-center">474 ккал</h2>
-    </div>
-    <div class="fb-75 df fv-center gray-p fs-small fw-space"><!--  list-item-pfc  -->
-        <p>Белки - 4.0 г.</p>
-        <p>Жиры - 38.0 г.</p>
-        <p>Углеводы - 29.0 г.</p>
-        <p>Волокна - 0.0 г.</p>
-    </div>
-    <div class="fb-25 df f-central"><!--  list-item-action  -->
-        <p><a href="#"><img src="/img/add.ico" class="action-ico" alt="Добавить в дневник"></a></p>
-        <p><a href="#"><img src="/img/edit.ico" class="action-ico" alt="Изменить"></a></p>
-        <p><a href="#"><img src="/img/delete.ico" class="action-ico" alt="Удалить"></a></p>
-    </div>
-</div>
-
-<!--<div th:fragment="list-item" class="df full-fb list-item pv-5px ph-10px">&lt;!&ndash;  list-item  &ndash;&gt;-->
-<!--    <div class="fb-75 gray-p">&lt;!&ndash;  list-item-name  &ndash;&gt;-->
-<!--        <h4>Листы для жарки для нежного куринного филе с чесноком и трав</h4>-->
-<!--        <p>Maggi</p>-->
-<!--    </div>-->
-<!--    <div class="fb-25 df">&lt;!&ndash;  list-item-kcal  &ndash;&gt;-->
-<!--        <select class="full-fb ta-right">-->
-<!--            <option>100 гр.</option>-->
-<!--            <option>Кастом порция</option>-->
-<!--        </select>-->
-<!--        <h2 class="full-fb ta-center">474 ккал</h2>-->
-<!--    </div>-->
-<!--    <div class="fb-75 df fv-center gray-p fs-small fw-space">&lt;!&ndash;  list-item-pfc  &ndash;&gt;-->
-<!--        <p>Белки - 4.0 г.</p>-->
-<!--        <p>Жиры - 38.0 г.</p>-->
-<!--        <p>Углеводы - 29.0 г.</p>-->
-<!--        <p>Волокна - 0.0 г.</p>-->
-<!--    </div>-->
-<!--    <div class="fb-25 df f-central">&lt;!&ndash;  list-item-action  &ndash;&gt;-->
-<!--        <p><a href="#"><img src="/img/add.ico" class="action-ico" alt="Добавить в дневник" ></a></p>-->
-<!--    </div>-->
-<!--</div>-->
 
 <div th:fragment="list-item" th:each="pr : ${products}" class="df full-fb list-item pv-5px ph-10px">
     <div class="fb-75 gray-p"><!--  list-item-name  -->
@@ -216,9 +147,44 @@
         <p th:text="'Волокна - ' + ${pr.getFibers()} +' г.'"></p>
     </div>
     <div class="fb-25 df f-central"><!--  list-item-action  -->
-        <p><a href="#"><img src="/img/add.ico" class="action-ico" alt="Добавить в дневник" ></a></p>
+        <p><a th:onclick="'showAddDiaryModal(' + ${pr.getId()} + ')'" href="#"><img src="/img/add.ico" class="action-ico" alt="Добавить в дневник" ></a></p>
         <p th:if="${pr.isUserProduct()}"><a th:href="'/products/edit/' + ${pr.getId()}">
             <img src="/img/edit.ico" class="action-ico" alt="Изменить" ></a>
         </p>
+    </div>
+</div>
+
+<div th:fragment="diary-modal" class="modal">
+    <!-- Модальное окно -->
+    <div class="modal__content">
+        <button class="modal__close-button" onclick="hideAddDiaryModel()">
+            <img th:src="@{../img/close.svg}" width="18" alt="">
+        </button>
+        <!-- Контент модального окна -->
+        <h1 class="modal__title">Добавление в дневник</h1>
+        <form action="/diary/add" method="post">
+            <input type="hidden" name="inputId" id="id-input-id">
+            <div>
+                <label for="weight-input-id">Вес</label>
+                <input required type="number" name="inputWeight" id="weight-input-id"/>
+            </div>
+            <div>
+                <label for="date-input-id">День</label>
+                <input type="date" name="inputDate" id="date-input-id"/>
+            </div>
+            <div>
+                <label for="mealtime-input-id">Прием пищи</label>
+                <select name="inputMealtime" id="mealtime-input-id">
+                    <option value="breakfast">Завтрак</option>
+                    <option value="lunch">Обед</option>
+                    <option value="dinner">Ужин</option>
+                    <option value="snack">Перекус</option>
+                    <option disabled value="Свой.."></option>
+                </select>
+            </div>
+            <div>
+                <input type="submit" value="Добавить">
+            </div>
+        </form>
     </div>
 </div>

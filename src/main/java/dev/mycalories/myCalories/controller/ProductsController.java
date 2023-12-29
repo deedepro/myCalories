@@ -60,20 +60,6 @@ public class ProductsController {
     }
 
     /**
-     * Обработчик события открытия страницы "Продукты" в режиме изменений продукта
-     * @param id id изменяемого продукта
-     * @param model параметры страницы
-     * @return открытие страницы "Продукты"
-     */
-    @GetMapping("/products/edit/{id}")
-    String showEditPage(@PathVariable(value = "id") long id, Model model) {
-        model.addAttribute("edit",true);
-        ProductView productView = productsService.makeProductView(id);
-        model.addAttribute("product", productView);
-        return showProductsPage(model);
-    }
-
-    /**
      * Обработчик события добавления нового продукта в систему
      * @param name имя продукта
      * @param brand производитель продукта
@@ -91,6 +77,20 @@ public class ProductsController {
         Product product = productsService.createProduct(name, brand, energyValue);
         foodService.addProduct(product);
         return "redirect:/products";
+    }
+
+    /**
+     * Обработчик события открытия страницы "Продукты" в режиме изменений продукта
+     * @param id id изменяемого продукта
+     * @param model параметры страницы
+     * @return открытие страницы "Продукты"
+     */
+    @GetMapping("/products/edit/{id}")
+    String showEditPage(@PathVariable(value = "id") long id, Model model) {
+        model.addAttribute("edit",true);
+        ProductView productView = productsService.makeProductView(id);
+        model.addAttribute("product", productView);
+        return showProductsPage(model);
     }
 
     /**
