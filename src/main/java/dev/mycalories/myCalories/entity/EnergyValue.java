@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "energy_values")
 @Data
@@ -18,13 +20,13 @@ public class EnergyValue {
     private Long id;
 
     @NonNull
-    private Double protein;
+    private BigDecimal protein;
     @NonNull
-    private Double fat;
+    private BigDecimal fat;
     @NonNull
-    private Double carbohydrates;
+    private BigDecimal carbohydrates;
     @NonNull
-    private Double alimentaryFiber;
+    private BigDecimal alimentaryFiber;
     @NonNull
-    private Double kilocalorie;
+    private BigDecimal kilocalorie;
 }

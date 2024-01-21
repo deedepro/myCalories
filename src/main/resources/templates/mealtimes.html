@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="https://www.thymeleaf.org">
+<style>
+    body, html {
+        overflow: clip;
+        height: 100%;
+    }
+
+    .wrapper {
+
+    }
+
+    .mealtimes button {
+        position: absolute;
+        border-radius: 300px;
+        background: white;
+        border: 1px solid black;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .mealtimes input{
+        position: absolute;
+        margin: 10px 0 0 200px  ;
+        height: 40px;
+        width: 120px;
+        border: 0;
+    }
+
+    .day {
+        height: 300px;
+        width: 300px;
+        margin-left: calc(50% - 150px);
+        margin-top: calc(25% - 150px);
+    }
+
+    .snack {
+        height: 150px;
+        width: 150px;
+        margin-left: calc(40% - 75px);
+        margin-top: calc(40% - 75px);
+    }
+
+    .dinner {
+        height: 150px;
+        width: 150px;
+        margin-left: calc(33% - 75px);
+        margin-top: calc(30% - 75px);
+    }
+
+    .lunch {
+        height: 150px;
+        width: 150px;
+        margin-left: calc(34% - 75px);
+        margin-top: calc(18% - 75px);
+    }
+
+    .breakfast {
+        height: 150px;
+        width: 150px;
+        margin-left: calc(44% - 75px);
+        margin-top: calc(9% - 75px);
+    }
+
+    .add {
+        height: 200px;
+        width: 200px;
+        margin-left: calc(57% - 75px);
+        margin-top: calc(6% - 75px);
+        background: linear-gradient(#72D76D, #28A020) !important;
+        border: 0 !important;
+    }
+
+    .back {
+        position: absolute;
+        margin: 10px;
+        height: 40px;
+        width: 100px;
+        font-size: 20px;
+        background: white;
+        border: 1px solid black;
+        cursor: pointer;
+    }
+    .normal {
+        margin-bottom: 5px;
+    }
+    .mini {
+        margin: 0 auto;
+        font-size: 11px;
+        color: gray;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Mealtimes</title>
+</head>
+<body>
+<form action="/calendar" method="post">
+    <input type="hidden" name="date" th:value="${backDate}">
+    <input type="submit" value="Назад" class="back">
+</form>
+<div class="wrapper">
+    <form action="/diary" class="mealtimes" method="get">
+        <label for="date"></label>
+        <input type="date" id="date" name="date" th:value="${inputDate}">
+        <input type="hidden" id="mealtime" name="mealtime">
+        <button class="add">Добавить</button>
+        <button class="breakfast" onclick="document.getElementById('mealtime').value = 'breakfast'">
+            <p class="normal">Завтрак</p>
+            <p class="mini" th:text="${map.get('breakfast')} + ' ккал'"></p>
+        </button>
+        <button class="lunch" onclick="document.getElementById('mealtime').value = 'lunch'">
+            <p class="normal">Обед</p>
+            <p class="mini" th:text="${map.get('lunch')} + ' ккал'"></p>
+        </button>
+        <button class="dinner" onclick="document.getElementById('mealtime').value = 'dinner'">
+            <p class="normal">Ужин</p>
+            <p class="mini" th:text="${map.get('dinner')} + ' ккал'"></p>
+        </button>
+        <button class="snack" onclick="document.getElementById('mealtime').value = 'snack'">
+            <p class="normal">Перекус</p>
+            <p class="mini" th:text="${map.get('snack')} + ' ккал'"></p>
+        </button>
+        <button class="day" onclick="document.getElementById('mealtime').value = 'all'">
+            <p class="normal">Весь день</p>
+            <p class="mini" th:text="${map.get('all')} + ' ккал'"></p>
+        </button>
+    </form>
+</div>
+</body>
+</html>

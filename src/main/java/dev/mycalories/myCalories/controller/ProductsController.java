@@ -2,7 +2,6 @@ package dev.mycalories.myCalories.controller;
 
 import dev.mycalories.myCalories.dto.ProductView;
 import dev.mycalories.myCalories.entity.EnergyValue;
-import dev.mycalories.myCalories.entity.Food;
 import dev.mycalories.myCalories.entity.Product;
 import dev.mycalories.myCalories.service.EnergyService;
 import dev.mycalories.myCalories.service.FoodService;
@@ -15,8 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Класс отвечает за работу сайта по пути /products
@@ -24,107 +23,197 @@ import java.util.Objects;
 @Controller
 public class ProductsController {
 
-    @Autowired
-    private ProductsService productsService;
+    private final ProductsService productsService;
+    private final EnergyService energyService;
+    private final FoodService foodService;
 
     @Autowired
-    private EnergyService energyService;
-
-    @Autowired
-    private FoodService foodService;
+    public ProductsController(ProductsService productsService, EnergyService energyService, FoodService foodService) {
+        this.productsService = productsService;
+        this.energyService = energyService;
+        this.foodService = foodService;
+    }
 
     /**
-     * Обработчик события открытия страницы "Продукты"
+     * Обработчик события открытия страницы "Продукты" без параметров
+     *
      * @param model параметры страницы
      * @return открытие страницы "Продукты"
      */
     @GetMapping("/products")
-    String showProductsPage(Model model){
-        List<ProductView> products = productsService.collectAllProducts();
-        model.addAttribute("products", products);
-        model.addAttribute("collection", "all");
-        return "products/products";
+    String showProductsPage(Model model) {
+        return showProductsPage(model, null, null);
     }
 
     /**
-     * Обработчик события открытия вкладки страницы "Мои продукты"
+     * Обработчик события открытия страницы "Продукты" с учетом фильтра
+     *
      * @param model параметры страницы
-     * @return открытия вкладки страницы "Мои продукты"
+     * @return открытие страницы "Продукты"
      */
-    @GetMapping("/products/my")
-    String showMyProductsPage(Model model){
-        List<ProductView> products = productsService.collectMyProducts();
+    @GetMapping("/products/{filter}")
+    String showProductsPage(Model model, @PathVariable(value = "filter") String filter, @RequestParam(name = "search", required = false) String search) {
+        return showProductsPage(model, filter, 0, search);
+    }
+
+    /**
+     * Обработчик события открытия страницы "Продукты" с учетом фильтра и выбранного продукта
+     *
+     * @param model параметры страницы
+     * @return открытие страницы "Продукты"
+     */
+    @GetMapping("/products/{filter}/{id}")
+    String showProductsPage(Model model, @PathVariable(value = "filter") String filter, @PathVariable(value = "id") long id, String search) {
+        prepareModel(model, filter, id, search);
+        return "products";
+    }
+
+    /**
+     * Обработчик события открытия страницы "Продукты" в режиме добавления продукта
+     *
+     * @param model параметры страницы
+     * @return открытие страницы "Продукты"
+     */
+    @GetMapping("/product/add")
+    String showAddPage(Model model) {
+        return "product";
+    }
+
+    /**
+     * Обработчик события открытия страницы "Продукты" в режиме изменений продукта
+     *
+     * @param id    id изменяемого продукта
+     * @param model параметры страницы
+     * @return открытие страницы "Продукты"
+     */
+    @GetMapping("/product/edit/{id}")
+    String showEditPage(Model model,
+                        @PathVariable(value = "id") long id,
+                        @RequestParam(value = "selectedFilter") String selectedFilter) {
+        ProductView productView = productsService.makeProductView(id);
+        model.addAttribute("selectedId", id);
+        model.addAttribute("selectedFilter", selectedFilter);
+        model.addAttribute("product", productView);
+        return "product";
+    }
+
+    void prepareModel(Model model, String filter, long id, String search) {
+        if(filter == null) filter = "all";
+        model.addAttribute("filter", filter);
+        List<ProductView> products = Collections.emptyList();
+        switch (filter) {
+            case "all":
+                products = productsService.collectAllProducts();
+                break;
+            case "my":
+                products = productsService.collectMyProducts();
+                break;
+            case "favorites":
+//            TODO: доделать "Избранное"
+//            products = productsService.collectFavoriteProducts();
+                break;
+        }
+
+        //search
+        if (search != null && !search.isEmpty()) {
+            products = productsService.searchProducts(products, search);
+            model.addAttribute("search", search);
+        }
+
         model.addAttribute("products", products);
-        model.addAttribute("collection", "my");
-        return "products/products";
+        ProductView selectedProductView;
+        if (id != 0) {
+            selectedProductView = products.stream().filter(product -> product.getId().equals(id)).findAny().orElse(null);
+        } else {
+            selectedProductView = products.stream().findFirst().orElse(null);
+        }
+        model.addAttribute("selectedProduct", selectedProductView);
+    }
+
+    private String buildUrlParams(long id, String filter) {
+        StringBuilder sb = new StringBuilder();
+        if (filter != null) {
+            sb.append("/").append(filter);
+        }
+        if (id != 0) {
+            sb.append("/").append(id);
+        }
+        return sb.toString();
     }
 
     /**
      * Обработчик события добавления нового продукта в систему
-     * @param name имя продукта
-     * @param brand производитель продукта
+     *
+     * @param name    имя продукта
+     * @param brand   производитель продукта
      * @param protein белки
-     * @param fat жиры
-     * @param carbs углеводы
-     * @param fibers пищевые волокна
-     * @param kcal энергетическая ценность в ккал
-     * @param model параметры страницы
+     * @param fat     жиры
+     * @param carb    углеводы
+     * @param fibers  пищевые волокна
+     * @param kcal    энергетическая ценность в ккал
+     * @param model   параметры страницы
      * @return переадресация на страницу "Продукты"
      */
-    @PostMapping("/products/add")
-    String addProduct(@RequestParam String name, @RequestParam String brand, @RequestParam String protein, @RequestParam String fat, @RequestParam String carbs, @RequestParam String fibers, @RequestParam String kcal, Model model) {
-        EnergyValue energyValue = energyService.createEnergyValue(protein, fat, carbs, fibers, kcal);
+    @PostMapping("/product/add")
+    String addProduct(@RequestParam String name, @RequestParam String brand, @RequestParam String protein, @RequestParam String fat, @RequestParam String carb, @RequestParam String fibers, @RequestParam(required = false) String kcal, Model model) {
+        EnergyValue energyValue = energyService.createEnergyValue(protein, fat, carb, fibers, kcal);
         Product product = productsService.createProduct(name, brand, energyValue);
         foodService.addProduct(product);
         return "redirect:/products";
     }
 
     /**
-     * Обработчик события открытия страницы "Продукты" в режиме изменений продукта
-     * @param id id изменяемого продукта
-     * @param model параметры страницы
-     * @return открытие страницы "Продукты"
-     */
-    @GetMapping("/products/edit/{id}")
-    String showEditPage(@PathVariable(value = "id") long id, Model model) {
-        model.addAttribute("edit",true);
-        ProductView productView = productsService.makeProductView(id);
-        model.addAttribute("product", productView);
-        return showProductsPage(model);
-    }
-
-    /**
      * Обработчик события изменения продукта в системе
-     * @param name новое значение параметра имя продукта
-     * @param brand новое значение параметра производитель продукта
+     *
+     * @param name    новое значение параметра имя продукта
+     * @param brand   новое значение параметра производитель продукта
      * @param protein новое значение параметра белки
-     * @param fat новое значение параметра жиры
-     * @param carbs новое значение параметра углеводы
-     * @param fibers новое значение параметра пищевые волокна
-     * @param kcal новое значение параметра энергетическая ценность в ккал
-     * @param model параметры страницы
+     * @param fat     новое значение параметра жиры
+     * @param carb    новое значение параметра углеводы
+     * @param fibers  новое значение параметра пищевые волокна
+     * @param kcal    новое значение параметра энергетическая ценность в ккал
+     * @param model   параметры страницы
      * @return переадресация на страницу "Продукты"
      */
-    @PostMapping("/products/edit/{id}")
-    String editProduct(@PathVariable(value = "id") long id, @RequestParam String name, @RequestParam String brand, @RequestParam String protein, @RequestParam String fat, @RequestParam String carbs, @RequestParam String fibers, @RequestParam String kcal, Model model) {
+    @PostMapping("/product/edit/{id}")
+    String editProduct(Model model,
+                       @PathVariable(value = "id") long id,
+                       @RequestParam String name,
+                       @RequestParam String brand,
+                       @RequestParam String protein,
+                       @RequestParam String fat,
+                       @RequestParam String carb,
+                       @RequestParam String fibers,
+                       @RequestParam(required = false) String kcal,
+                       @RequestParam(required = false) long selectedId,
+                       @RequestParam(required = false) String selectedFilter) {
         Product product = productsService.findProduct(id);
-        EnergyValue energyValue = product.getEnergyValue();
-        energyValue = energyService.editEnergyValues(energyValue, protein, fat, carbs, fibers, kcal);
-        product = productsService.editProduct(product, name, brand, energyValue);
-        foodService.editProduct(product);
-        return "redirect:/products";
+        if (productsService.isUserProduct(product)) {
+            EnergyValue energyValue = product.getEnergyValue();
+            energyValue = energyService.editEnergyValues(energyValue, protein, fat, carb, fibers, kcal);
+            product = productsService.editProduct(product, name, brand, energyValue);
+            foodService.editProduct(product);
+        }
+        String urlParams = buildUrlParams(selectedId, selectedFilter);
+        return "redirect:/products" + urlParams;
     }
 
     /**
      * Обработчик события удаления продукта из системы
-     * @param id id продукта
+     *
+     * @param id    id продукта
      * @param model параметры страницы
      * @return переадресация на страницу "Продукты"
      */
-    @PostMapping("/products/del/{id}")
-    String deleteProduct(@PathVariable(value = "id") long id, Model model) {
+    @PostMapping("/product/del/{id}")
+    String deleteProduct(Model model,
+                         @PathVariable(value = "id") long id,
+                         @RequestParam(required = false) String selectedFilter) {
         Product product = productsService.findProduct(id);
-        foodService.delProduct(product);
-        return "redirect:/products";
+        if (productsService.isUserProduct(product)) {
+            foodService.delProduct(product);
+        }
+        String urlParams = buildUrlParams(0, selectedFilter);
+        return "redirect:/products" + urlParams;
     }
 }

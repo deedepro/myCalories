@@ -19,9 +19,7 @@ public class MainController {
     @GetMapping("/")
     String showCorePage(Model model) {
         if (userService.isAuthentication()){
-            Date currentDate = new Date(System.currentTimeMillis());
-            model.addAttribute("currentDate",currentDate);
-            return "home/home";
+            return "home";
         }
         else {
             return "hello";
@@ -38,9 +36,19 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/registration")
+    @GetMapping("/reg")
     String showRegistrationPage(Model model) {
-        return "registration";
+        return "reg";
+    }
+
+    @GetMapping("/settings")
+    String showSettingsPage(Model model) {
+        return "settings";
+    }
+
+    @GetMapping("/settings/pass")
+    String showChangePasswordPage(Model model) {
+        return "pass";
     }
 
     @PostMapping("/registration")

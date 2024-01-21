@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.math.BigInteger;
+
 @Entity
 @Table(name = "ingredients")
 @Data
@@ -26,5 +28,5 @@ public class Ingredient {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Product product;
     @NonNull
-    private Double weight;
+    private BigInteger weight;
 }

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="https://www.thymeleaf.org">
+<style>
+    body, html {
+        height: 100%;
+        width: 100%;
+        overflow: clip;
+        margin-left: 0;
+        margin-right: 0;
+        font-size: 3vh;
+        min-height: 50vh;
+        min-width: 50vw;
+    }
+
+    .top {
+        height: 8vh;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        font-size: 3vh;
+    }
+
+    .back {
+        margin: 1vh;
+        height: 6vh;
+        width: 12vw;
+        font-size: 2.5vh;
+        background: #FFFFFF;
+        border: 1px solid black;
+        cursor: pointer;
+        float: left;
+    }
+
+    .wrapper {
+        justify-content: center;
+        display: flex;
+        flex-wrap: nowrap;
+        height: calc(100% - 8vh);
+        width: 100%;
+    }
+
+    .double-screen {
+        width: 50%;
+        height: 100%;
+    }
+
+    .right {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+    }
+
+    .list-block {
+        height: calc(100% - 8vh);
+        width: 80%;
+        margin: 25px 10% 75px;
+    }
+
+    .info-block {
+        height: 50vh;
+        width: 25vw;
+        margin-top: 25px;
+        margin-right: 15%;
+        border: 1px solid black;
+        border-radius: 8vh;
+    }
+
+    .add-block {
+        display: flex;
+        flex-direction: row-reverse;
+        height: 25vh;
+        margin-top: 5vh;
+        margin-right: 15%;
+    }
+
+    .add-form {
+        aspect-ratio: 1 / 1;
+    }
+
+    .info-table-view {
+        margin: 5vh 2vw;
+    }
+
+    .table-view div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .info-table-row-div {
+        height: 5vh;
+    }
+
+    .info-table-row-div p {
+        font-size: 2.5vh;
+        margin: 1vh 0;
+        white-space: nowrap;
+    }
+
+    .entity-table {
+        height: 72vh;
+        width: 40vw;
+        border: 1px solid black;
+        overflow: auto;
+    }
+
+    .entity-table-row-div {
+        height: 6vh;
+        border: 1px solid black;
+        background: inherit;
+    }
+
+    .selected { /* NOT DELETE */
+        border: 3px solid black;
+    }
+
+    .mini {
+        font-size: 2.1vh !important;
+    }
+
+    .weight {
+        color: gray;
+        margin-top: 0 !important;
+    }
+
+    .large {
+        font-size: 3.5vh !important;
+        font-weight: bold;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    .add-button {
+        height: 100%;
+        width: 100%;
+        border: none;
+        border-radius: 100%;
+        background: linear-gradient(#72D76D, #28A020);
+        color: white;
+        font-size: 500%;
+    }
+
+    .edit-button {
+        width: 100%;
+        margin-top: 1vh;
+        height: 6vh;
+        border-radius: 1vh;
+        font-size: 3vh;
+        background: inherit;
+    }
+
+    .del-button {
+        width: 100%;
+        margin-top: 1vh;
+        height: 6vh;
+        border-radius: 1vh;
+        font-size: 3vh;
+        color: white;
+        background: linear-gradient(red, darkred);
+    }
+
+    .filter-div button {
+        width: 12vw;
+        height: 6vh;
+        border-radius: 1vh;
+        font-size: 3vh;
+        background: inherit;
+    }
+
+    .entity-button {
+        width: 100%;
+        height: 100%;
+        padding: 0 2vh;
+        font-size: 2.5vh;
+        background: inherit;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+    }
+
+    .top p, input {
+        margin: 1vh;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Дневник</title>
+</head>
+<body>
+<div class="top">
+    <form action="/mealtimes" method="get">
+        <input type="hidden" th:value="${date}" id="date" name="date">
+        <button class="back">Назад</button>
+    </form>
+    <p th:text="${dateView}"></p>
+    <p th:text="${mealtimeRusName}"></p>
+</div>
+<div class="wrapper">
+    <div class="double-screen">
+        <div class="list-block">
+            <div class="table-view entity-table">
+                <th:block th:each="entity : ${entities}">
+                    <form th:action="'/diary/' + ${entity.getId()}" method="get">
+                        <input type="hidden" name="date" th:value="${param.date}">
+                        <input type="hidden" name="mealtime" th:value="${param.mealtime}">
+                        <div class="entity-table-row-div"
+                             th:classappend="${selectedEntity != null && entity.getId() == selectedEntity.getId() ? 'selected' : ''}">
+                            <button class="entity-button">
+                                <p th:text="${entity.getProductView().getName()}"></p>
+                                <p th:text="${entity.getWeight()} + ' гр'"></p>
+                            </button>
+                        </div>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+    </div>
+    <div class="double-screen right">
+        <div class="info-block">
+            <div class="table-view info-table-view">
+                <th:block th:if="${selectedEntity != null}">
+                    <div class="info-table-row-div">
+                        <p class="large" th:text="${selectedEntity.getProductView().getName()}"></p>
+                    </div>
+                    <div class="info-table-row-div" style="height: 3vh">
+                        <p class="mini weight" th:text="${selectedEntity.getWeight()} + ' гр'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Калории</p>
+                        <p th:text="${selectedEntity.getProductView().getKcal()} + ' ккал'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Белки</p>
+                        <p th:text="${selectedEntity.getProductView().getProtein()} + ' гр'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Жиры</p>
+                        <p th:text="${selectedEntity.getProductView().getFat()} + ' гр'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Углеводы</p>
+                        <p th:text="${selectedEntity.getProductView().getCarb()} + ' гр'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Пищевые волокна</p>
+                        <p th:text="${selectedEntity.getProductView().getFibers()} + ' гр'"></p>
+                    </div>
+                    <form method="get">
+                        <div>
+                            <input type="hidden" name="date" th:value="${date}">
+                            <input type="hidden" name="mealtime" th:value="${mealtime}">
+                            <button class="edit-button" th:formaction="'/diary/edit/' + ${selectedEntity.getId()}">Изменить</button>
+                            <button class="del-button" th:if="${selectedEntity.getId() != null}"
+                                    th:formaction="'/diary/del/' + ${selectedEntity.getId()}"
+                                    th:formmethod="post">Удалить</button>
+                        </div>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+        <div class="add-block">
+            <form class="add-form" action="/diary/menu" method="get">
+                <input type="hidden" name="date" th:value="${date}">
+                <input type="hidden" name="mealtime" th:value="${mealtime}">
+                <button class="add-button">+</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

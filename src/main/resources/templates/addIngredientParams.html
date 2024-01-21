@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru"
+      xmlns:th="https://www.thymeleaf.org">
 <style>
     html, body {
         height: 100%;
@@ -44,23 +45,18 @@
         cursor: pointer;
     }
 
-    .button-reg {
-        width: 230px;
-        background: white;
-        border: 1px solid black;
-        margin-right: 20px;
-    }
-
     .button-login {
-        width: 340px;
+        width: 600px;
         background: linear-gradient(#72D76D, #28A020);
+        color: white;
         border: 0;
     }
-     label, input[type=text], input[type=password]{
-         font-size: 20px;
-         flex-basis: 50%;
-     }
-    input[type=text], input[type=password] {
+    label, input[type=number], input[type=date], select{
+        font-size: 20px;
+        flex-basis: 50%;
+        box-sizing: border-box;
+    }
+    input[type=number], input[type=date], select {
         height: 40px;
         text-align: center;
         border-radius: 6px;
@@ -70,25 +66,29 @@
 </style>
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title th:text="${product.getName()}"></title>
 </head>
 <body>
-<form action="/back" method="post">
+<form action="/diary" method="get">
     <input type="submit" value="Назад" class="back">
 </form>
 <div class="wrapper">
-    <form action="/login" method="post" class="content">
+    <form action="/recipes/ingredient/add" method="post" class="content">
+        <input type="hidden" name="recipe_id" th:value="${recipeId}">
+        <input type="hidden" name="product_id" th:value="${product.getId()}">
         <div>
-            <label for="username">Имя пользователя</label>
-            <input type="text" placeholder="login" name="username" id="username">
+            <label for="portion">Порция</label>
+            <select required class="add-select" disabled name="portion" id="portion">
+                <option value="gram">гр</option>
+                <option value="object">штук</option>
+            </select>
         </div>
         <div>
-            <label for="password">Пароль</label>
-            <input type="password" placeholder="password" name="password" id="password">
+            <label for="count">Количество</label>
+            <input required class="add-input" type="number" placeholder="150" id="count" name="count">
         </div>
         <div>
-            <button class="button button-reg" onclick="window.location='/reg'; return false;">Зарегистрироваться</button>
-            <button type="submit" class="button button-login">Войти</button>
+            <button type="submit" class="button button-login">Добавить</button>
         </div>
     </form>
 </div>

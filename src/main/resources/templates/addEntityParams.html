@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="https://www.thymeleaf.org">
+<style>
+    html, body {
+        height: 100%;
+        overflow: clip;
+    }
+
+    .back {
+        margin: 10px;
+        height: 40px;
+        width: 100px;
+        font-size: 20px;
+        background: #FFFFFF;
+        border: 1px solid black;
+    }
+
+    .wrapper {
+        height: calc(100% - 60px);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .content {
+        height: 300px;
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .content div {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        margin-bottom: 10px;
+    }
+
+    .button {
+        height: 40px;
+        border-radius: 6px;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .button-login {
+        width: 600px;
+        background: linear-gradient(#72D76D, #28A020);
+        color: white;
+        border: 0;
+    }
+    label, input[type=number], input[type=date], select{
+        font-size: 20px;
+        flex-basis: 50%;
+        box-sizing: border-box;
+    }
+    input[type=number], input[type=date], select {
+        height: 40px;
+        text-align: center;
+        border-radius: 6px;
+        border: 1px solid black;
+        cursor: pointer;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.getName()}"></title>
+</head>
+<body>
+<form action="/diary" method="get">
+    <input type="submit" value="Назад" class="back">
+</form>
+<div class="wrapper">
+    <form th:action="${'/diary/add/' + product.getId()}" method="post" class="content">
+        <div>
+            <label for="portion">Порция</label>
+            <select required class="add-select" disabled name="portion" id="portion">
+                <option value="gram">гр</option>
+                <option value="object">штук</option>
+            </select>
+        </div>
+        <div>
+            <label for="count">Количество</label>
+            <input required class="add-input" type="number" placeholder="150" id="count" name="count">
+        </div>
+        <div>
+            <label for="mealtime">Прием пищи</label>
+            <select required class="add-select" name="mealtime" id="mealtime">
+                <option th:selected="${mealtime?.equals('breakfast')}" value="breakfast">Завтрак</option>
+                <option th:selected="${mealtime?.equals('lunch')}" value="lunch">Обед</option>
+                <option th:selected="${mealtime?.equals('dinner')}" value="dinner">Ужин</option>
+                <option th:selected="${mealtime?.equals('snack')}" value="snack">Перекус</option>
+                <option disabled value="add">Свой..</option>
+            </select>
+        </div>
+        <div>
+            <label for="date">Дата</label>
+            <input required class="add-input" type="date" th:value="${date}" id="date" name="date">
+        </div>
+        <div>
+            <button type="submit" class="button button-login">Добавить</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,9 +1,16 @@
 package dev.mycalories.myCalories.controller;
 
-import dev.mycalories.myCalories.dto.EntryView;
+import dev.mycalories.myCalories.dto.EntityView;
+import dev.mycalories.myCalories.dto.ProductView;
+import dev.mycalories.myCalories.dto.RecipeView;
+import dev.mycalories.myCalories.entity.Diary;
 import dev.mycalories.myCalories.entity.Mealtime;
+import dev.mycalories.myCalories.entity.Product;
+import dev.mycalories.myCalories.entity.Recipe;
 import dev.mycalories.myCalories.service.DiaryService;
 import dev.mycalories.myCalories.service.MealtimeService;
+import dev.mycalories.myCalories.service.ProductsService;
+import dev.mycalories.myCalories.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,140 +19,251 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigInteger;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Класс отвечает за работу сайта по пути /diary
  */
 @Controller
 public class DiaryController {
+
+    private final ProductsService productsService;
+    private final RecipeService recipeService;
+    private final DiaryService diaryService;
+    private final MealtimeService mealtimeService;
+
     @Autowired
-    public DiaryController(DiaryService diaryService, MealtimeService mealtimeService) {
+    public DiaryController(ProductsService productsService, RecipeService recipeService, DiaryService diaryService, MealtimeService mealtimeService) {
+        this.recipeService = recipeService;
+        this.productsService = productsService;
         this.diaryService = diaryService;
         this.mealtimeService = mealtimeService;
     }
 
-    /**
-     * Сервис для работы с моделью дневника
-     */
-    private final DiaryService diaryService;
+    private final SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
 
-    /**
-     * Сервис для работы с моделью приема пищи
-     */
-    private final MealtimeService mealtimeService;
+    @GetMapping("/diary")
+    String showDiaryPage(Model model,
+                         @RequestParam(value = "mealtime", required = false) String mealtimeName,
+                         @RequestParam(value = "date", required = false) Date date) {
+        return showDiaryPage(model, mealtimeName, date, 0);
+    }
 
-    /**
-     * Подготовка параметров страницы дневника
-     *
-     * @param mealtime модель приема пищи
-     * @param date     дата
-     * @param model    параметры страницы
-     * @return ссылка на html шаблон страницы дневника
-     */
-    private String prepareDiaryPage(Mealtime mealtime, Date date, Model model) {
+    @GetMapping("/diary/{selectedId}")
+    String showDiaryPage(Model model,
+                         @RequestParam(value = "mealtime", required = false) String mealtimeName,
+                         @RequestParam(value = "date", required = false) Date date,
+                         @PathVariable(name = "selectedId") long selectedId) {
         if (date == null) {
             date = new Date(System.currentTimeMillis());
         }
-        model.addAttribute("dateAttr", date);
+        model.addAttribute("date", date);
+        model.addAttribute("dateView", formatter.format(date));
 
-        List<EntryView> entries;
-        if (mealtime == null) {
-            model.addAttribute("mealtimeAttr", "all");
-            entries = diaryService.collectAllEntriesByDate(date);
-        } else {
-            model.addAttribute("mealtimeAttr", mealtime.getName());
-            entries = diaryService.collectAllEntriesByDateAndMealtime(date, mealtime);
+        if (mealtimeName == null || mealtimeName.isEmpty()) {
+            mealtimeName = "all";
         }
-        model.addAttribute("entries", entries);
+        model.addAttribute("mealtimeRusName", mealtimeService.translateName(mealtimeName));
+        model.addAttribute("mealtime", mealtimeName);
 
-        return "diary/diary";
+        List<EntityView> entities = collectEntities(date, mealtimeName);
+        model.addAttribute("entities", entities);
+
+        EntityView selectedEntity;
+        if (selectedId == 0) {
+            selectedEntity = diaryService.createTotalEntityView(entities, mealtimeService.translateName(mealtimeName));
+        } else {
+            selectedEntity = findSelectedEntityView(entities, selectedId);
+            selectedEntity.getProductView().setName(selectedEntity.getProductView().getName());
+        }
+        model.addAttribute("selectedEntity", selectedEntity);
+
+
+        return "diary";
     }
 
-    /**
-     * Показать страницу дневника с параметрами, определенными системой
-     *
-     * @param model параметры страницы
-     * @return обновление страницы дневника
-     */
-    @GetMapping("/diary")
-    String showDiaryPage(Model model) {
-        Mealtime mealtime = mealtimeService.calcMealtimeByCurrentTime();
-        return prepareDiaryPage(mealtime, null, model);
+    @GetMapping("/diary/menu")
+    String showMenuPage(Model model,
+                        @RequestParam(value = "date", required = false) Date date,
+                        @RequestParam(value = "mealtime", required = false) String mealtimeName) {
+        return showMenuPage(model, null, null, date, mealtimeName);
     }
 
-    /**
-     * Показать страницу дневника с выбранными пользователем параметрами
-     *
-     * @param inputDate     значение выбранной пользователем даты в формате строки
-     * @param inputMealtime наименование выбранного пользователем приема пищи
-     * @param model         параметры страницы
-     * @return обновление страницы дневника
-     */
-    @PostMapping("/diary")
-    public String showDiaryParamsPage(@RequestParam(value = "inputDate") Date inputDate,
-                                @RequestParam(value = "inputMealtime") String inputMealtime,
-                                Model model) {
-        Mealtime mealtime = mealtimeService.findMealtimeByName(inputMealtime);
-        return prepareDiaryPage(mealtime, inputDate, model);
+    @GetMapping("/diary/menu/{filter}")
+    String showMenuPage(Model model,
+                        @PathVariable(value = "filter") String filter,
+                        @RequestParam(name = "search", required = false) String search,
+                        @RequestParam(value = "date", required = false) Date date,
+                        @RequestParam(value = "mealtime", required = false) String mealtimeName) {
+        return showMenuPage(model, filter, 0, search, date, mealtimeName);
     }
 
-    /**
-     * Добавить запись в дневник
-     *
-     * @param inputId       идентификатор выбранного продукта
-     * @param inputMealtime наименование выбранного пользователем приема пищи
-     * @param inputDate     выбранная пользователем дата в формате строки
-     * @param inputWeight   указанный пользователем вес
-     * @param model         параметры страницы
-     * @return обновление страницы дневника
-     */
-    @PostMapping("/diary/add")
-    String addFoodToDiary(@RequestParam(value = "inputId") long inputId,
-                          @RequestParam(value = "inputMealtime") String inputMealtime,
-                          @RequestParam(value = "inputDate") Date inputDate,
-                          @RequestParam(value = "inputWeight") int inputWeight,
-                          Model model) {
-        Mealtime mealtime = mealtimeService.findMealtimeByName(inputMealtime);
-        diaryService.addEntry(inputId, inputWeight, inputDate, mealtime);
-        return "redirect:/products";
+    @GetMapping("/diary/menu/{filter}/{id}")
+    String showMenuPage(Model model,
+                        @PathVariable(value = "filter") String filter,
+                        @PathVariable(value = "id") long id,
+                        @RequestParam(name = "search", required = false) String search,
+                        @RequestParam(value = "date", required = false) Date date,
+                        @RequestParam(value = "mealtime", required = false) String mealtimeName) {
+        model.addAttribute("date", date);
+        model.addAttribute("mealtime", mealtimeName);
+        prepareModel(model, filter, id, search);
+        return "diaryProductPage";
+    }
+
+    void prepareModel(Model model, String filter, long id, String search) {
+        if(filter == null){
+            filter = "all";
+        }
+        model.addAttribute("filter", filter);
+
+        List<ProductView> items = new ArrayList<>();
+        switch (filter) {
+            case "all": {
+                List<RecipeView> recipeViews = recipeService.collectAllRecipes();
+                List<ProductView> productViews = productsService.collectAllProducts();
+                items.addAll(productViews);
+                items.addAll(recipeViews);
+                break;
+            }
+            case "my": {
+                List<RecipeView> recipeViews = recipeService.collectMyRecipes();
+                List<ProductView> productViews = productsService.collectMyProducts();
+                items.addAll(productViews);
+                items.addAll(recipeViews);
+                break;
+            }
+            case "favorites":
+//            TODO: доделать "Избранное"
+//            products = productsService.collectFavoriteProducts();
+                break;
+        }
+
+        //search
+        if (search != null && !search.isEmpty()) {
+            items = productsService.searchProducts(items, search);
+            model.addAttribute("search", search);
+        }
+
+        model.addAttribute("products", items);
+        ProductView selectedProductView;
+        if (id != 0) {
+            selectedProductView = items.stream().filter(product -> product.getId().equals(id)).findAny().orElse(null);
+        } else {
+            selectedProductView = items.stream().findFirst().orElse(null);
+        }
+        model.addAttribute("selectedProduct", selectedProductView);
+    }
+
+    @GetMapping("/diary/add/{id}")
+    String showAddPage(Model model,
+                       @PathVariable(value = "id") long productId,
+                       @RequestParam(value = "dateFilter", required = false) Date date,
+                       @RequestParam(value = "mealtimeFilter", required = false) String mealtimeName) {
+        //Параметры прошлой страницы
+        model.addAttribute("date", date);
+        model.addAttribute("mealtime", mealtimeName);
+
+        ProductView productView;
+        Product product = productsService.findProduct(productId);
+        if(product != null){
+            productView = productsService.createProductView(product);
+        } else {
+            Recipe recipe = recipeService.findRecipe(productId);
+            productView = recipeService.createRecipeView(recipe);
+        }
+
+        model.addAttribute("product", productView);
+        return "addEntityParams";
     }
 
     /**
      * Обработчик события открытия страницы "Дневник" в режиме изменений записи дневника
      *
-     * @param inputId       идентификатор выбранного продукта
-     * @param model         параметры страницы
+     * @param id    идентификатор выбранного продукта
+     * @param model параметры страницы
      * @return открытие страницы "Дневник"
      */
-    @GetMapping("/diary/edit/{inputId}")
-    String showEditPage(@PathVariable(value = "inputId") long inputId, Model model) {
-        model.addAttribute("edit",true);
-        EntryView editEntry = diaryService.makeEntryView(inputId);
-        model.addAttribute("entry", editEntry);
-        return showDiaryPage(model);
+    @GetMapping("/diary/edit/{id}")
+    String showEditPage(Model model,
+                        @PathVariable(value = "id") long id,
+                        @RequestParam(value = "date", required = false) Date date,
+                        @RequestParam(value = "mealtime", required = false) String mealtimeName) {
+        model.addAttribute("date", date);
+        model.addAttribute("mealtime", mealtimeName);
+        Diary diary = diaryService.findDiary(id);
+        EntityView entity = diaryService.createEntityView(diary);
+        model.addAttribute("entity", entity);
+        return "entity";
+    }
+
+    private List<EntityView> collectEntities(Date date, String mealtimeName) {
+        if (date == null) {
+            date = new Date(System.currentTimeMillis());
+        }
+        if (!"all".equals(mealtimeName)) {
+            Mealtime mealtime = mealtimeService.findMealtimeByName(mealtimeName);
+            return diaryService.collectAllEntitiesByDateAndMealtime(date, mealtime);
+        } else {
+            return diaryService.collectAllEntitiesByDate(date);
+        }
+    }
+
+    private EntityView findSelectedEntityView(List<EntityView> entities, long id) {
+        return entities.stream().filter(entity -> entity.getId().equals(id)).findAny().orElse(null);
+    }
+
+    /**
+     * Добавить запись в дневник
+     *
+     * @param id           идентификатор выбранного продукта
+     * @param mealtimeName наименование выбранного пользователем приема пищи
+     * @param date         выбранная пользователем дата в формате строки
+     * @param inputWeight  указанный пользователем вес
+     * @param model        параметры страницы
+     * @return обновление страницы дневника
+     */
+    @PostMapping("/diary/add/{id}")
+    String addFoodToDiary(@PathVariable(value = "id") long id,
+                          @RequestParam(value = "mealtime") String mealtimeName,
+                          @RequestParam(value = "date") Date date,
+                          @RequestParam(value = "count") BigInteger inputWeight,
+                          Model model) {
+        Mealtime mealtime = mealtimeService.findMealtimeByName(mealtimeName);
+        diaryService.addEntity(id, inputWeight, date, mealtime);
+        String params = "?date=" + date + "&mealtime=" + mealtimeName;
+        return "redirect:/diary" + params;
     }
 
     /**
      * Обработчик события изменения записи дневника в системе
      *
-     * @param inputId       идентификатор выбранного продукта
-     * @param inputMealtime наименование выбранного пользователем приема пищи
-     * @param inputDate     выбранная пользователем дата в формате строки
-     * @param inputWeight   указанный пользователем вес
-     * @param model         параметры страницы
+     * @param id           идентификатор выбранного продукта
+     * @param mealtimeName наименование выбранного пользователем приема пищи
+     * @param date         выбранная пользователем дата в формате строки
+     * @param count        указанный пользователем вес
+     * @param model        параметры страницы
      * @return переадресация на страницу "Дневника"
      */
-    @PostMapping("/diary/edit")
-    String editEntry(@RequestParam(value = "inputId") long inputId,
-                     @RequestParam(value = "inputMealtime") String inputMealtime,
-                     @RequestParam(value = "inputDate") Date inputDate,
-                     @RequestParam(value = "inputWeight") int inputWeight,
-                     Model model) {
-        Mealtime mealtime = mealtimeService.findMealtimeByName(inputMealtime);
-        diaryService.editEntry(inputId, inputWeight, inputDate, mealtime);
-        return "redirect:/diary";
+    @PostMapping("/diary/edit/{id}")
+    String editEntity(@PathVariable(value = "id") long id,
+                      @RequestParam(value = "mealtime") String mealtimeName,
+                      @RequestParam(value = "date") Date date,
+                      @RequestParam(value = "entityMealtime") String entityMealtimeName,
+                      @RequestParam(value = "entityDate") Date entityDate,
+                      @RequestParam(value = "count") BigInteger count,
+                      Model model) {
+        Mealtime entityMealtime = mealtimeService.findMealtimeByName(entityMealtimeName);
+        diaryService.editEntry(id, count, entityDate, entityMealtime);
+        String params = "?date=" + date + "&mealtime=" + mealtimeName;
+        return "redirect:/diary" + params;
     }
 
     /**
@@ -155,10 +273,13 @@ public class DiaryController {
      * @param model параметры страницы
      * @return обновление страницы дневника
      */
-    @GetMapping("/diary/del/{inputId}")
-    String deleteEntry(@PathVariable(value = "inputId") long id,
-                       Model model) {
-        diaryService.deleteEntry(id);
-        return "redirect:/diary";
+    @PostMapping("/diary/del/{id}")
+    String deleteEntity(@PathVariable(value = "id") long id,
+                        @RequestParam(value = "date", required = false) Date date,
+                        @RequestParam(value = "mealtime", required = false) String mealtimeName,
+                        Model model) {
+        diaryService.deleteEntity(id);
+        String params = "?date=" + date + "&mealtime=" + mealtimeName;
+        return "redirect:/diary" + params;
     }
 }

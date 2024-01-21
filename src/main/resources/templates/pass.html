@@ -13,6 +13,7 @@
         font-size: 20px;
         background: #FFFFFF;
         border: 1px solid black;
+        cursor: pointer;
     }
 
     .wrapper {
@@ -38,57 +39,57 @@
     }
 
     .button {
-        height: 40px;
+        margin-top: 20px;
+        height: 50px;
         border-radius: 6px;
         font-size: 20px;
         cursor: pointer;
+        color: white;
     }
 
-    .button-reg {
-        width: 230px;
-        background: white;
-        border: 1px solid black;
-        margin-right: 20px;
-    }
-
-    .button-login {
-        width: 340px;
+    .button-save {
+        margin-left: 20%;
+        width: 60%;
         background: linear-gradient(#72D76D, #28A020);
         border: 0;
     }
-     label, input[type=text], input[type=password]{
-         font-size: 20px;
-         flex-basis: 50%;
-     }
+
+    label, input[type=text], input[type=password] {
+        font-size: 20px;
+        flex-basis: 50%;
+    }
+
     input[type=text], input[type=password] {
         height: 40px;
         text-align: center;
         border-radius: 6px;
         border: 1px solid black;
-        cursor: pointer;
     }
 </style>
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Password Settings</title>
 </head>
 <body>
 <form action="/back" method="post">
     <input type="submit" value="Назад" class="back">
 </form>
 <div class="wrapper">
-    <form action="/login" method="post" class="content">
+    <form action="/settings/pass" method="post" class="content">
         <div>
-            <label for="username">Имя пользователя</label>
-            <input type="text" placeholder="login" name="username" id="username">
+            <label for="old_password">Старый пароль</label>
+            <input type="password" placeholder="********" name="password" id="old_password">
         </div>
         <div>
-            <label for="password">Пароль</label>
-            <input type="password" placeholder="password" name="password" id="password">
+            <label for="password">Новый пароль</label>
+            <input type="password" placeholder="********" name="password" id="password">
         </div>
         <div>
-            <button class="button button-reg" onclick="window.location='/reg'; return false;">Зарегистрироваться</button>
-            <button type="submit" class="button button-login">Войти</button>
+            <label for="password-check">Подтвердить пароль</label>
+            <input type="password" placeholder="********" name="password" id="password-check">
+        </div>
+        <div>
+            <button type="submit" class="button button-save">Сохранить</button>
         </div>
     </form>
 </div>

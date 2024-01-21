@@ -17,6 +17,16 @@ public class MealtimeServiceImpl implements MealtimeService {
     private MealtimesRepository mealtimesRepository;
 
     @Override
+    public List<Mealtime> findAllMealtimes() {
+        return mealtimesRepository.findAll();
+    }
+
+    @Override
+    public Mealtime findMealtimeById(long id) {
+        return mealtimesRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Mealtime findMealtimeByName(String name) {
         return mealtimesRepository.findTopByName(name);
     }
@@ -37,6 +47,18 @@ public class MealtimeServiceImpl implements MealtimeService {
             mealtimeName = "dinner";
         }
         return mealtimesRepository.findTopByName(mealtimeName);
+    }
+
+    @Override
+    public String translateName(String mealtimeName) {
+        return switch (mealtimeName) {
+            case "breakfast" -> "Завтрак";
+            case "lunch" -> "Обед";
+            case "dinner" -> "Ужин";
+            case "snack" -> "Перекус";
+            case "all" -> "За весь день";
+            default -> mealtimeName;
+        };
     }
 
     @PostConstruct

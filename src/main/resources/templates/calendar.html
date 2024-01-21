@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="https://www.thymeleaf.org">
+<style>
+    body, html {
+        height: 100%;
+        overflow: clip;
+    }
+
+    .wrapper {
+        height: calc(100% - 60px);
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .top {
+        height: 60px;
+    }
+
+    .back {
+        margin: 10px;
+        height: 40px;
+        width: 100px;
+        font-size: 20px;
+        background: #FFFFFF;
+        border: 1px solid black;
+        cursor: pointer;
+        float: left;
+    }
+
+    .navigation {
+        float: right;
+        margin: 10px;
+        height: 40px;
+        font-size: 20px;
+        width: 250px;
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: nowrap;
+    }
+
+    .row button {
+        margin: 10px 20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 6px;
+        font-size: 15px;
+        background: white;
+        border: 1px solid black;
+        padding-top: 16px;
+    }
+
+    .days p {
+        margin: 0 20px;
+        width: 80px;
+        font-size: 15px;
+        text-align: center;
+    }
+
+    .invisible {
+        border: 1px dashed gray !important;
+    }
+
+    button p{
+        margin: 5px 0;
+    }
+
+    .mini{
+        font-size: 10px;
+        color: gray;
+    }
+
+    .active { /* Используется через th:classappend */
+        border: 3px solid black !important;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar</title>
+</head>
+<body>
+<div class="top">
+    <form action="/" method="get">
+        <button class="back">Назад</button>
+    </form>
+    <form action="/calendar" method="post">
+        <label for="date"></label>
+        <input type="month" id="date" name="date" class="navigation" th:value="${inputMonth}"
+               onchange="this.form.submit()">
+    </form>
+</div>
+<div class="wrapper">
+    <div>
+        <div class="row days" id="0r">
+            <p>Пн</p>
+            <p>Вт</p>
+            <p>Ср</p>
+            <p>Чт</p>
+            <p>Пт</p>
+            <p>Сб</p>
+            <p>Вс</p>
+        </div>
+        <div class="row" id="1r">
+            <th:block th:each="i, state : ${calendarMap}">
+                <th:block th:if="${state.count <= 7}">
+                    <th:block th:if="${i.getValue() == null}">
+                        <button class="invisible"></button>
+                    </th:block>
+                    <th:block th:if="${i.getValue() != null}">
+                        <th:block th:fragment="test">
+                            <form action="/mealtimes" method="get">
+                                <input type="hidden" name="date" th:value="${i.getValue().getDate()}">
+                                <button type="submit"
+                                        th:classappend="${i.getValue().getDay() == today ? 'active' : ''}">
+                                    <p th:text="${i.getValue().getDay()}"></p>
+                                    <p class="mini" th:text="${i.getValue().getKcal()} + ' ккал'"></p>
+                                </button>
+                            </form>
+                        </th:block>
+                    </th:block>
+                </th:block>
+            </th:block>
+        </div>
+        <div class="row" id="2r">
+            <th:block th:each="i, state : ${calendarMap}">
+                <th:block th:if="${state.count > 7 && state.count <= 14}">
+                    <th:block th:replace="calendar :: test"></th:block>
+                </th:block>
+            </th:block>
+        </div>
+        <div class="row" id="3r">
+            <th:block th:each="i, state : ${calendarMap}">
+                <th:block th:if="${state.count > 14 && state.count <= 21}">
+                    <th:block th:replace="calendar :: test"></th:block>
+                </th:block>
+            </th:block>
+        </div>
+        <div class="row" id="4r">
+            <th:block th:each="i, state : ${calendarMap}">
+                <th:block th:if="${state.count > 21 && state.count <= 28}">
+                    <th:block th:replace="calendar :: test"></th:block>
+                </th:block>
+            </th:block>
+        </div>
+        <div class="row" id="5r">
+            <th:block th:each="i, state : ${calendarMap}">
+                <th:block th:if="${state.count > 28 && state.count <= 35}">
+                    <th:block th:if="${i.getValue() != null}">
+                        <th:block th:replace="calendar :: test"></th:block>
+                    </th:block>
+                    <th:block th:if="${i.getValue() == null}">
+                        <button class="invisible"></button>
+                    </th:block>
+                </th:block>
+            </th:block>
+        </div>
+        <th:block th:if="${calendarMap.get(36) != null}">
+            <div class="row" id="6r">
+                <th:block th:each="i, state : ${calendarMap}">
+                    <th:block th:if="${state.count > 35}">
+                        <th:block th:if="${i.getValue() != null}">
+                            <th:block th:replace="calendar :: test"></th:block>
+                        </th:block>
+                        <th:block th:if="${i.getValue() == null}">
+                            <button class="invisible"></button>
+                        </th:block>
+                    </th:block>
+                </th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>
+

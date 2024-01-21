@@ -13,7 +13,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator="my_seq")
+    @SequenceGenerator(name="my_seq",sequenceName="MY_SEQ", allocationSize = 1)
     private Long id;
     @NonNull
     private String name;

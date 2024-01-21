@@ -8,7 +8,7 @@ import dev.mycalories.myCalories.entity.Recipe;
 public interface FoodService {
     Food addProduct(Product product);
 
-    void addRecipe(Recipe recipe);
+    Food addRecipe(Recipe recipe);
 
     Food editProduct(Product product);
     Food editRecipe(Recipe recipe);

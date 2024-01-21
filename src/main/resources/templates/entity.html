@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      lang="ru">
+<style>
+    html, body {
+        height: 100%;
+        overflow: clip;
+        font-size: 2.5vh;
+    }
+
+    .back {
+        margin: 10px;
+        height: 40px;
+        width: 100px;
+        font-size: 20px;
+        background: #FFFFFF;
+        border: 1px solid black;
+        cursor: pointer;
+    }
+
+    .wrapper {
+        height: calc(100% - 60px);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .content {
+        height: 50vh;
+        width: 50vw;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .content div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 8vh;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .column {
+        flex-basis: 45%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .mini-column {
+        flex-basis: 45%;
+        justify-content: space-between;
+    }
+
+    input, select {
+        height: 6vh;
+        width: 100%;
+        text-align: center;
+        border-radius: 1vh;
+        border: 1px solid black;
+        font-size: 2vh;
+    }
+
+    .button {
+        height: 6vh;
+        border-radius: 1vh;
+        cursor: pointer;
+        font-size: 2.5vh;
+    }
+
+    .button-main {
+        width: 35vw;
+        background: linear-gradient(#72D76D, #28A020);
+        border: 0;
+        color: white;
+    }
+
+    .button-delete {
+        width: 10vw;
+        background: linear-gradient(red, darkred);
+        border: 0;
+        color: white;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${entity?.getProductView().getName()}"></title>
+</head>
+<body>
+<form action="/products" method="get">
+    <input type="submit" value="Назад" class="back">
+</form>
+<div class="wrapper">
+    <form method="post" class="content">
+        <input type="hidden" name="date" th:value="${date}">
+        <input type="hidden" name="mealtime" th:value="${mealtime}">
+        <div class="row">
+            <h1 th:text="${entity?.getProductView().getName()}"></h1>
+        </div>
+        <div class="row">
+            <h3 th:text="${entity?.getProductView().getBrand()}"></h3>
+        </div>
+        <div class="row">
+            <div class="column">
+                <div class="mini-column">
+                    <label for="portion">Порция</label>
+                </div>
+                <div class="mini-column">
+                    <select required class="edit-select" disabled name="portion" id="portion">
+                        <option selected value="gram">гр</option>
+                        <option value="object">штук</option>
+                    </select>
+                </div>
+            </div>
+            <div class="column">
+                <div class="mini-column">
+                    <label for="mealtime">Прием пищи</label>
+                </div>
+                <div class="mini-column">
+                    <select class="edit-select" name="entityMealtime" id="mealtime">
+                        <option th:selected="${entity?.getMealtime() == 'breakfast'}" value="breakfast">Завтрак</option>
+                        <option th:selected="${entity?.getMealtime() == 'lunch'}" value="lunch">Обед</option>
+                        <option th:selected="${entity?.getMealtime() == 'dinner'}" value="dinner">Ужин</option>
+                        <option th:selected="${entity?.getMealtime() == 'snack'}" value="snack">Перекус</option>
+                        <option disabled value="add">Свой..</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column">
+                <div class="mini-column">
+                    <label for="count">Количество</label>
+                </div>
+                <div class="mini-column">
+                    <input class="edit-input" type="number" placeholder="150" name="count" id="count" th:value="${entity?.getWeight()}">
+                </div>
+            </div>
+            <div class="column">
+                <div class="mini-column">
+                    <label for="date">Дата</label>
+                </div>
+                <div class="mini-column">
+                    <input class="edit-input" type="date" name="entityDate" id="date" th:value="${entity?.getDate()}">
+                </div>
+            </div>
+        </div>
+        <div>
+            <button th:formaction="${'/diary/edit/' + entity.getId()}"
+                    type="submit" class="button button-main">Сохранить запись
+            </button>
+            <button th:formaction="'/diary/del/' + ${entity.getId()}"
+                    type="submit" class="button button-delete"
+                    th:text="Удалить">
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>

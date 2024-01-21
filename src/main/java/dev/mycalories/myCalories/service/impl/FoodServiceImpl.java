@@ -23,9 +23,10 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public void addRecipe(Recipe recipe) {
+    public Food addRecipe(Recipe recipe) {
         Food food = new Food(recipe);
         foodRepo.save(food);
+        return food;
     }
 
     @Override
@@ -37,7 +38,9 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public Food editRecipe(Recipe recipe) {
-        return null;
+        Food food = findFood(recipe);
+        foodRepo.save(food);
+        return food;
     }
 
     @Override

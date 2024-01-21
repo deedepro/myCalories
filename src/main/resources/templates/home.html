@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ru">
+<style>
+    html, body {
+        height: 100%;
+        overflow: clip;
+    }
+
+    .wrapper {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button {
+        border-radius: 20px;
+        border: 1px solid black;
+        background: white;
+        font-size: 20px;
+        margin: 20px;
+        cursor: pointer;
+    }
+
+    .diary {
+        background: linear-gradient(#D5E8D4, #97D077);
+        border: 0;
+        width: 600px;
+        height: 300px;
+    }
+
+    .recipes {
+        width: 350px;
+        height: 200px;
+    }
+
+    .products {
+        width: 300px;
+        height: 200px;
+    }
+
+    .settings {
+        width: 400px;
+        height: 300px;
+    }
+    .logout{
+        border-radius: 15px;
+        width: 260px;
+        height: 50px;
+    }
+    .right{
+        margin-top: 110px;
+    }
+    .avatar{
+        height: 90px;
+        border-radius: 100px;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<div class="wrapper">
+    <div class="left">
+        <form action="/calendar" method="get">
+            <button class="button diary">
+                Дневник
+            </button>
+        </form>
+        <form action="/products" method="get" style="float: right">
+            <button class="button products">
+                Продукты
+            </button>
+        </form>
+    </div>
+    <div class="right">
+        <form action="/logout" method="get" style="display: flex">
+            <img src="/img/avatar.png" alt="Аватар" class="avatar">
+            <button class="button logout">
+                Выход
+            </button>
+        </form>
+        <form action="/recipes" method="get">
+            <button class="button recipes">
+                Рецепты
+            </button>
+        </form>
+        <form action="/settings" method="get">
+            <button class="button settings">
+                Настройки
+            </button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

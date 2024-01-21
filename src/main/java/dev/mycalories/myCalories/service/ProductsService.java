@@ -5,10 +5,12 @@ import dev.mycalories.myCalories.entity.EnergyValue;
 import dev.mycalories.myCalories.entity.Product;
 import dev.mycalories.myCalories.entity.User;
 
+import java.math.BigInteger;
 import java.util.List;
 
 public interface ProductsService {
     Product findProduct(Long id);
+
     Product createProduct(String name,
                           String brand,
                           EnergyValue energyValue);
@@ -21,9 +23,13 @@ public interface ProductsService {
 
     List<ProductView> collectMyProducts();
 
+    List<ProductView> searchProducts(List<ProductView> productList, String search);
+
     ProductView makeProductView(Long productId);
 
-    ProductView createProductView(Product products);
+    ProductView createProductView(Product product);
+
+    ProductView createProductView(Product product, BigInteger weight);
 
     boolean isUserProduct(Product product);
 }

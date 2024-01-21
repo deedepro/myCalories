@@ -1,6 +1,11 @@
 package dev.mycalories.myCalories.service;
 
+import dev.mycalories.myCalories.entity.Diary;
 import dev.mycalories.myCalories.entity.EnergyValue;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 
 public interface EnergyService {
 
@@ -9,6 +14,7 @@ public interface EnergyService {
                                   String carbohydrates,
                                   String alimentaryFiber,
                                   String kilocalorie);
+    EnergyValue createEnergyValue();
 
     EnergyValue editEnergyValues(EnergyValue energyValue,
                                  String protein,
@@ -17,5 +23,15 @@ public interface EnergyService {
                                  String fibers,
                                  String kcal);
 
-    Double calcKcal(EnergyValue energyValue);
+
+    BigDecimal calcKilocalorie(List<Diary> entries);
+
+    BigDecimal calcKilocalorie(EnergyValue energyValue);
+
+    BigDecimal calcKilocalorie(EnergyValue energyValue, BigInteger weight);
+
+    BigDecimal calculateEnergyValueWeight(BigDecimal nutrientWeight, BigInteger entityWeight);
+    BigDecimal calculateDefaultEnergyValueWeight(BigDecimal totalEnergyValue, BigDecimal totalWeight);
+
+    void saveEnergyValue(EnergyValue energyValue);
 }

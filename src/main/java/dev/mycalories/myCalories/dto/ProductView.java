@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +14,7 @@ public class ProductView {
     @NonNull
     private Long id;
     private String name, brand;
-    private Double protein, fat, carb, fibers, kcal;
+    private BigDecimal protein, fat, carb, fibers, kcal;
 
     private boolean userProduct;
 
@@ -22,7 +24,7 @@ public class ProductView {
         this.brand = brand;
     }
 
-    public void setEnergyValues(Double protein, Double fat, Double carb, Double fibers, Double kcal) {
+    public void setEnergyValues(BigDecimal protein, BigDecimal fat, BigDecimal carb, BigDecimal fibers, BigDecimal kcal) {
         this.protein = protein;
         this.fat = fat;
         this.carb = carb;

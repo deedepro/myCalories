@@ -13,6 +13,7 @@
         font-size: 20px;
         background: #FFFFFF;
         border: 1px solid black;
+        cursor: pointer;
     }
 
     .wrapper {
@@ -20,14 +21,14 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        align-items: center;
+        margin-top: 5%;
     }
 
     .content {
-        height: 300px;
         width: 600px;
         display: flex;
         flex-direction: column;
+        margin-top: 1.5%;
     }
 
     .content div {
@@ -44,51 +45,69 @@
         cursor: pointer;
     }
 
-    .button-reg {
+    .button-pass {
         width: 230px;
         background: white;
         border: 1px solid black;
         margin-right: 20px;
     }
 
-    .button-login {
-        width: 340px;
+    .button-save {
+        width: 350px;
         background: linear-gradient(#72D76D, #28A020);
         border: 0;
+        color: white;
     }
-     label, input[type=text], input[type=password]{
-         font-size: 20px;
-         flex-basis: 50%;
-     }
+
+    label, input[type=text], input[type=password] {
+        font-size: 20px;
+        flex-basis: 50%;
+    }
+
     input[type=text], input[type=password] {
         height: 40px;
         text-align: center;
         border-radius: 6px;
         border: 1px solid black;
-        cursor: pointer;
+    }
+    .avatar{
+        height: 200px;
+        border-radius: 100px;
+    }
+    .avatar-block{
+        position: absolute;
+        margin-left: 10%;
+        margin-right: calc(90% - 200px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 </style>
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Settings</title>
 </head>
 <body>
 <form action="/back" method="post">
     <input type="submit" value="Назад" class="back">
 </form>
 <div class="wrapper">
-    <form action="/login" method="post" class="content">
+    <div class="avatar-block">
+        <img src="/img/avatar.png" alt="Аватар" class="avatar">
+        <p>Аватар</p>
+    </div>
+    <form action="/settings/save" method="post" class="content">
+        <div>
+            <label for="email">Email</label>
+            <input type="text" placeholder="calorie@email.com" name="email" id="email">
+        </div>
         <div>
             <label for="username">Имя пользователя</label>
-            <input type="text" placeholder="login" name="username" id="username">
+            <input type="text" placeholder="username" name="username" id="username">
         </div>
         <div>
-            <label for="password">Пароль</label>
-            <input type="password" placeholder="password" name="password" id="password">
-        </div>
-        <div>
-            <button class="button button-reg" onclick="window.location='/reg'; return false;">Зарегистрироваться</button>
-            <button type="submit" class="button button-login">Войти</button>
+            <button type="submit" class="button button-pass" onclick="window.location='/settings/pass'; return false;">Изменить пароль</button>
+            <button type="submit" class="button button-save">Сохранить</button>
         </div>
     </form>
 </div>

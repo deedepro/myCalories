@@ -3,6 +3,7 @@ package dev.mycalories.myCalories.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigInteger;
 import java.sql.Date;
 
 @Entity
@@ -15,13 +16,16 @@ public class Diary {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NonNull
+    @ManyToOne
+    private Food food;
+    @NonNull
+    @ManyToOne
+    private User user;
+    @NonNull
     private Date date;
     @NonNull
     @ManyToOne
     private Mealtime mealtime;
     @NonNull
-    @ManyToOne
-    private Food food;
-    @NonNull
-    private int weight;
+    private BigInteger weight;
 }

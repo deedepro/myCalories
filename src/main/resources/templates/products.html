@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="https://www.thymeleaf.org">
+<style>
+    body, html {
+        height: 100%;
+        width: 100%;
+        overflow: clip;
+        margin-left: 0;
+        margin-right: 0;
+        font-size: 3vh;
+        /*min-height: 400px;*/
+        /*min-width: 600px;*/
+        min-height: 50vh;
+        min-width: 50vw;
+    }
+
+    .top {
+        height: 8vh;
+    }
+
+    .back {
+        margin: 1vh;
+        height: 6vh;
+        width: 12vw;
+        font-size: 2.5vh;
+        background: #FFFFFF;
+        border: 1px solid black;
+        cursor: pointer;
+        float: left;
+    }
+
+    .wrapper {
+        justify-content: center;
+        display: flex;
+        flex-wrap: nowrap;
+        height: calc(100% - 8vh);
+        width: 100%;
+    }
+
+    .double-screen {
+        width: 50%;
+        height: 100%;
+    }
+
+    .right {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+    }
+
+    .list-block {
+        height: calc(100% - 8vh);
+        width: 80%;
+        margin: 25px 10% 75px;
+    }
+
+    .info-block {
+        height: 50vh;
+        width: 25vw;
+        margin-top: 25px;
+        margin-right: 15%;
+        border: 1px solid black;
+        border-radius: 8vh;
+    }
+
+    .add-block {
+        display: flex;
+        flex-direction: row-reverse;
+        height: 25vh;
+        margin-top: 5vh;
+        margin-right: 15%;
+    }
+
+    .add-form {
+        aspect-ratio: 1 / 1;
+    }
+
+    .add-button {
+        height: 100%;
+        width: 100%;
+        border: none;
+        border-radius: 100%;
+        background: linear-gradient(#72D76D, #28A020);
+        color: white;
+        font-size: 500%;
+    }
+
+    .info-table-view {
+        margin: 5vh 2vw;
+    }
+
+    .table-view div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .info-table-row-div{
+        height: 5vh;
+    }
+
+    .info-table-row-div p {
+        font-size: 2.5vh;
+        margin: 1vh 0;
+        white-space: nowrap;
+    }
+
+    .product-table {
+        height: 72vh;
+        width: 40vw;
+        border: 1px solid black;
+        overflow: auto;
+    }
+
+    .product-table-row-div {
+        height: 6vh;
+        border: 1px solid black;
+        background: inherit;
+    }
+
+    .selected{ /* NOT DELETE */
+        border: 3px solid black;
+    }
+
+    .mini {
+        font-size: 2.1vh !important;
+    }
+
+    .brand {
+        color: gray;
+        margin-top: 0 !important;
+    }
+
+    .large {
+        font-size: 3.5vh !important;
+        font-weight: bold;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    .edit-button {
+        width: 100%;
+        margin-top: 1vh;
+        height: 6vh;
+        border-radius: 1vh;
+        font-size: 3vh;
+        background: inherit;
+    }
+
+    .filter-form{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .filter-div {
+        height: 8vh;
+        width: 40vw;
+    }
+
+    .filter-div button {
+        width: 12vw;
+        height: 6vh;
+        border-radius: 1vh;
+        font-size: 3vh;
+        background: inherit;
+    }
+
+    .product-button{
+        width: 100%;
+        height: 100%;
+        padding: 0 2vh;
+        font-size: 2.5vh;
+        background: inherit;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+    }
+
+    .search-input{
+        height: 4vh;
+        flex-basis: 100%;
+        border: none;
+        outline: none;
+        font-size: 2.5vh;
+        padding: 0 1vw;
+    }
+
+    .search-form{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-basis: 100%;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Продукты</title>
+</head>
+<body>
+<div class="top">
+<!--    <button class="back" onclick="window.history.back()">Назад</button>-->
+    <form action="/" method="get">
+        <button class="back">Назад</button>
+    </form>
+</div>
+<!--Start example code-->
+<div class="wrapper">
+    <div class="double-screen">
+        <div class="list-block">
+            <div class="filter-div">
+                <form method="get" class="filter-form">
+                    <button th:classappend="${filter.equals('all') ? 'selected' : ''}" formaction="/products/all">Все</button>
+                    <button th:classappend="${filter.equals('my') ? 'selected' : ''}" formaction="/products/my">Мои</button>
+                    <button th:classappend="${filter.equals('favorites') ? 'selected' : ''}" formaction="/products/favorites" disabled>Избранные</button>
+                </form>
+            </div>
+            <div class="table-view product-table">
+                <div class="product-table-row-div">
+                    <form class="search-form" th:action="'/products/' + ${filter}" method="get">
+                        <label for="search"></label>
+                        <input class="search-input" type="text" placeholder="Поиск ..." id="search" name="search" th:value="${search}">
+<!--                        <button class="search-button" type="submit">Поиск</button>-->
+                    </form>
+                </div>
+                <th:block th:each="product : ${products}">
+                    <form th:action="'/products/' + ${filter} + '/' + ${product.getId()}" method="get">
+                        <input type="hidden" name="search" th:value="${search}">
+                        <div class="product-table-row-div" th:classappend="${product.getId() == selectedProduct.getId() ? 'selected' : ''}">
+                            <button class="product-button">
+                                <p th:text="${product.getName()}"></p>
+                                <p th:text="${product.getKcal()} + ' ккал'"></p>
+                            </button>
+                        </div>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+    </div>
+    <div class="double-screen right">
+        <div class="info-block">
+            <th:block th:if="${selectedProduct != null}">
+                <div class="table-view info-table-view">
+                    <div class="info-table-row-div">
+                        <p class="large" th:text="${selectedProduct.getName()}"></p>
+                    </div>
+                    <div class="info-table-row-div" style="height: 3vh">
+                        <p class="mini brand" th:text="${selectedProduct.getBrand()}"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Калории</p>
+                        <p th:text="${selectedProduct.getKcal()} + ' ккал'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Белки</p>
+                        <p th:text="${selectedProduct.getProtein()} + ' гр'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Жиры</p>
+                        <p th:text="${selectedProduct.getFat()} + ' гр'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Углеводы</p>
+                        <p th:text="${selectedProduct.getCarb()} + ' гр'"></p>
+                    </div>
+                    <div class="info-table-row-div">
+                        <p>Пищевые волокна</p>
+                        <p th:text="${selectedProduct.getFibers()} + ' гр'"></p>
+                    </div>
+                    <form th:action="'/product/edit/' + ${selectedProduct.getId()}">
+                        <input type="hidden" name="selectedFilter" th:value="${filter}">
+                        <button class="edit-button" th:disabled="${!selectedProduct.isUserProduct()}">Изменить продукт</button>
+                    </form>
+                </div>
+            </th:block>
+        </div>
+        <div class="add-block">
+            <form class="add-form" action="/product/add" method="get">
+                <button class="add-button">+</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!--End-->
+</body>
+</html>
