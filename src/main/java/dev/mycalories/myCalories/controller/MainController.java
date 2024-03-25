@@ -51,14 +51,24 @@ public class MainController {
         return "pass";
     }
 
-    @PostMapping("/registration")
+
+    //TODO: Добавить email
+    @PostMapping("/reg")
     String register(@RequestParam String username,
                     @RequestParam String password,
+                    @RequestParam String passwordCheck,
                     Model model) {
-        String errorMessage = userService.createUser(username, password);
-        String validMessage = "Регистрация завершена";
-        String message = errorMessage != null ? errorMessage : validMessage;
-        model.addAttribute("message", message);
-        return null;
+        String errorMessage;
+        if(password.equals(passwordCheck)){
+            errorMessage = userService.createUser(username, password);
+        } else {
+            errorMessage = "Введенные пароли не совпадают";
+        }
+        if(errorMessage != null){
+            model.addAttribute("message", errorMessage);
+            return null;
+        } else {
+            return "redirect:/login";
+        }
     }
 }

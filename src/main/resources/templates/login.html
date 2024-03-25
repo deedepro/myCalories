@@ -48,7 +48,6 @@
         width: 230px;
         background: white;
         border: 1px solid black;
-        margin-right: 20px;
     }
 
     .button-login {
@@ -67,28 +66,34 @@
         border: 1px solid black;
         cursor: pointer;
     }
+    .backward{
+        flex-direction: row-reverse;
+    }
+    .space{
+        justify-content: space-between;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
 <body>
-<form action="/back" method="post">
+<form action="/" method="get">
     <input type="submit" value="Назад" class="back">
 </form>
 <div class="wrapper">
-    <form action="/login" method="post" class="content">
+    <form method="post" class="content">
         <div>
             <label for="username">Имя пользователя</label>
-            <input type="text" placeholder="login" name="username" id="username">
+            <input required type="text" placeholder="login" name="username" id="username">
         </div>
         <div>
             <label for="password">Пароль</label>
-            <input type="password" placeholder="password" name="password" id="password">
+            <input required type="password" placeholder="password" name="password" id="password">
         </div>
-        <div>
-            <button class="button button-reg" onclick="window.location='/reg'; return false;">Зарегистрироваться</button>
-            <button type="submit" class="button button-login">Войти</button>
+        <div class="backward space">
+            <button type="submit" class="button button-login" formaction="/login">Войти</button>
+            <button class="button button-reg" formmethod="get" formaction="/reg" formnovalidate>Зарегистрироваться</button>
         </div>
     </form>
 </div>

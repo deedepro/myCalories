@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru"
+      xmlns:th="https://www.thymeleaf.org">
 <style>
     html, body {
         height: 100%;
@@ -69,17 +70,29 @@
         border-radius: 6px;
         border: 1px solid black;
     }
+    .backward{
+        flex-direction: row-reverse;
+    }
+    .space-between{
+        justify-content: space-between;
+    }
+    .space-around{
+        justify-content: space-around;
+    }
+    .red{
+        color: red;
+    }
 </style>
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
 <body>
-<form action="/back" method="post">
+<form action="/" method="get">
     <input type="submit" value="Назад" class="back">
 </form>
 <div class="wrapper">
-    <form action="/reg" method="post" class="content">
+    <form class="content">
         <div>
             <label for="email">Email</label>
             <input type="text" placeholder="calorie@email.com" name="email" id="email">
@@ -94,11 +107,14 @@
         </div>
         <div>
             <label for="password-check">Подтвердить пароль</label>
-            <input type="password" placeholder="********" name="password" id="password-check">
+            <input type="password" placeholder="********" name="passwordCheck" id="password-check">
         </div>
-        <div>
-            <button type="submit" class="button button-login" formaction="/login" formmethod="get">Уже есть аккаунт</button>
-            <button type="submit" class="button button-reg">Зарегистрироваться</button>
+        <div class="backward space-between">
+            <button type="submit" class="button button-reg" formaction="/reg" formmethod="post">Зарегистрироваться</button>
+            <button type="submit" class="button button-login" formaction="/login" formmethod="get" formnovalidate>Уже есть аккаунт</button>
+        </div>
+        <div class="space-around" th:if="${message != null}">
+            <p class="red" th:text="${message}"></p>
         </div>
     </form>
 </div>
