@@ -2,9 +2,11 @@ package dev.mycalories.myCalories.controller;
 
 import dev.mycalories.myCalories.dto.ProductView;
 import dev.mycalories.myCalories.entity.EnergyValue;
+import dev.mycalories.myCalories.entity.Portion;
 import dev.mycalories.myCalories.entity.Product;
 import dev.mycalories.myCalories.service.EnergyService;
 import dev.mycalories.myCalories.service.FoodService;
+import dev.mycalories.myCalories.service.PortionService;
 import dev.mycalories.myCalories.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,12 +25,14 @@ import java.util.List;
 @Controller
 public class ProductsController {
     private final ProductsService productsService;
+    private final PortionService portionService;
     private final EnergyService energyService;
     private final FoodService foodService;
 
     @Autowired
-    public ProductsController(ProductsService productsService, EnergyService energyService, FoodService foodService) {
+    public ProductsController(ProductsService productsService, PortionService portionService, EnergyService energyService, FoodService foodService) {
         this.productsService = productsService;
+        this.portionService = portionService;
         this.energyService = energyService;
         this.foodService = foodService;
     }
@@ -157,6 +161,7 @@ public class ProductsController {
     String addProduct(@RequestParam String name, @RequestParam String brand, @RequestParam String protein, @RequestParam String fat, @RequestParam String carb, @RequestParam String fibers, @RequestParam(required = false) String kcal, Model model) {
         EnergyValue energyValue = energyService.createEnergyValue(protein, fat, carb, fibers, kcal);
         Product product = productsService.createProduct(name, brand, energyValue);
+        portionService.createDefaultPortion(product);
         foodService.addProduct(product);
         return "redirect:/products";
     }
