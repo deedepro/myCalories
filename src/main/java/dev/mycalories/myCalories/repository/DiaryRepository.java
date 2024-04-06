@@ -9,8 +9,6 @@ import java.sql.Date;
 import java.util.List;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
-    List<Diary> findAllByDate(Date date);
     List<Diary> findAllByUserAndDate(User user, Date date);
-
     List<Diary> findAllByUserAndDateAndMealtime(User user, Date date, Mealtime mealtime);
 }

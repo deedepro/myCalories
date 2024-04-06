@@ -7,11 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductsRepository
-//        extends CrudRepository<Product, Long> {
-        extends JpaRepository<Product, Long> {
-    Product findTopByOrderByIdDesc();
+public interface ProductsRepository extends JpaRepository<Product, Long> {
     Iterable<Product> findAllByUser(User user);
-
     boolean existsByNameAndBrandAndUser(String name, String brand, User User);
 }
