@@ -20,13 +20,11 @@ import java.util.List;
 
 @Controller
 public class RecipesController {
-
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
     private final ProductsController productsController;
     private final ProductsService productsService;
     private final FoodService foodService;
-
     private final EnergyService energyService;
 
     @Autowired

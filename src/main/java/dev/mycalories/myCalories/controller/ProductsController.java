@@ -22,7 +22,6 @@ import java.util.List;
  */
 @Controller
 public class ProductsController {
-
     private final ProductsService productsService;
     private final EnergyService energyService;
     private final FoodService foodService;
