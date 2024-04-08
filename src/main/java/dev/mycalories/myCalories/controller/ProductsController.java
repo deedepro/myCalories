@@ -198,8 +198,10 @@ public class ProductsController {
             product = productsService.editProduct(product, name, brand, energyValue);
             foodService.editProduct(product);
         }
+
         String urlParams = buildUrlParams(selectedId, selectedFilter);
-        return "redirect:/products" + urlParams;
+//        return "redirect:/products" + urlParams;
+        return "redirect:/products/" + id + "/portions?selectedFilter=" + selectedFilter;
     }
 
     /**

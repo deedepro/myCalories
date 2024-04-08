@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org"
+      lang="ru">
+<style>
+    html, body {
+        display: flex;
+        justify-content: center;
+    }
+
+    .back-block {
+        width: 100%;
+        height: 5vh;
+    }
+
+    .full-form {
+        width: 100%;
+        height: 100%;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    .product-info-block {
+        width: 100%;
+        height: 25vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .p_maxi {
+        margin: 0;
+        font-size: 4vh;
+    }
+
+    .p_mini {
+        margin: 0;
+        color: gray;
+        font-size: 2vh;
+    }
+
+    .portions-block {
+        width: 90%;
+        height: 50vh;
+        padding-left: 5%;
+        padding-right: 5%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header-block {
+        width: 100%;
+        height: 5vh;
+    }
+
+    .portion-block{
+        height: 5vh;
+    }
+
+    .portion-form {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .portion-form div{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .portion-name-block {
+        width: 30%;
+        height: 5vh;
+    }
+
+    .portion-equals-block {
+        width: 10%;
+        height: 5vh;
+    }
+
+    .portion-count-block {
+        width: 30%;
+        height: 5vh;
+    }
+
+    .portion-portion-block {
+        width: 15%;
+        height: 5vh;
+    }
+
+    .portion-button-block {
+        width: 15%;
+        height: 5vh;
+    }
+
+    input {
+        text-align: center;
+        font-size: 1.5vh;
+        border: 0.1vh solid black;
+        border-radius: 2.5vh;
+    }
+
+    .portion-input {
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+
+    .remove-button {
+        height: 4vh;
+        aspect-ratio: 1 / 1;
+        border-radius: 100vh;
+    }
+
+    .add-button{
+        height: 4vh;
+        aspect-ratio: 1 / 1;
+        border-radius: 100vh;
+    }
+
+    .continue-block {
+        width: 100%;
+        height: 10vh;
+    }
+
+    .continue-button {
+        width: calc(100% - 1vh);
+        height: 9vh;
+        margin: 0.5vh;
+        font-size: 3vh;
+        border-radius: 3vh;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title th:text="Порции"></title>
+    <link type="text/css" rel="stylesheet" href="/css/main.css"/>
+</head>
+<body>
+<div class="mobile-view">
+    <div class="back-block">
+        <form method="get" th:action="${'/product/edit/' + product.getId()}" class="full-form">
+            <input type="hidden" name="selectedFilter" th:value="${selectedFilter}">
+            <input type="submit" value="Назад" class="back-button">
+        </form>
+    </div>
+    <div class="product-info-block">
+        <p class="p_maxi"><b th:text="${product.getName()}"></b></p>
+        <p class="p_mini" th:text="${product.getBrand()}"></p>
+    </div>
+    <div class="portions-block">
+        <div class="header-block">
+            <p class="p_maxi"><b>Порции</b></p>
+        </div>
+        <th:block th:each="portion : ${portions}">
+            <div class="portion-block">
+                <form method="post" action="/portions/del" class="portion-form">
+                    <div class="portion-name-block">
+                        <p th:text="${portion.getName()}"></p>
+                    </div>
+                    <div class="portion-equals-block">
+                        <p>=</p>
+                    </div>
+                    <div class="portion-count-block">
+                        <p th:text="${portion.getCount()}"></p>
+                    </div>
+                    <div class="portion-portion-block">
+                        <p>гр</p>
+                    </div>
+                    <div class="portion-button-block">
+                        <input type="hidden" name="selectedFilter" th:value="${selectedFilter}">
+                        <input type="hidden" name="id" th:value="${portion.getId()}">
+                        <input type="submit" value="-" class="remove-button red-button">
+                    </div>
+                </form>
+            </div>
+        </th:block>
+        <div class="portion-block">
+            <form method="post" action="/portions/add" class="portion-form">
+                <div class="portion-name-block">
+                    <label for="portion-name-input"></label>
+                    <input id="portion-name-input" required type="text" placeholder="Имя" name="name" class="portion-input">
+                </div>
+                <div class="portion-equals-block">
+                    <p class="portion-equals">=</p>
+                </div>
+                <div class="portion-count-block">
+                    <label for="portion-count-input"></label>
+                    <input id="portion-count-input" required type="number" placeholder="Количество" name="count" class="portion-input">
+                </div>
+                <div class="portion-portion-block">
+                    <p class="portion-portion">гр</p>
+                </div>
+                <div class="portion-button-block">
+                    <input type="hidden" name="selectedFilter" th:value="${selectedFilter}">
+                    <input type="hidden" name="id" th:value="${product.getId()}">
+                    <input type="submit" value="+" class="add-button green-button">
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="continue-block">
+        <form method="get" th:action="${'/products/' + selectedFilter + '/' + product.getId()}" class="full-form">
+            <input type="submit" value="Продолжить" class="continue-button green-button">
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+

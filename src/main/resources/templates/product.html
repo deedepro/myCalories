@@ -159,26 +159,25 @@
                 </div>
             </div>
         </div>
-
-        <div class="row">
-            <div class="column">
-                <div class="mini-column">
-                    <label for="kcal">Килокалории</label>
-                </div>
-                <div class="mini-column">
-                    <input type="number" placeholder="310" name="kcal" id="kcal"
-                           th:value="${product?.getKcal()}">
-                </div>
-            </div>
-            <div class="column">
-                <button type="submit" class="button button-options" disabled>Добавить порции</button>
-            </div>
-        </div>
-
+<!--        <div class="row">-->
+<!--            <div class="column">-->
+<!--                <div class="mini-column">-->
+<!--                    <label for="kcal">Килокалории</label>-->
+<!--                </div>-->
+<!--                <div class="mini-column">-->
+<!--                    <input type="number" placeholder="310" name="kcal" id="kcal"-->
+<!--                           th:value="${product?.getKcal()}">-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="column">-->
+<!--                <button th:formaction="${product != null ? '/product/edit/' + product.getId() : '/product/add'}"-->
+<!--                        type="submit" class="button button-options">Добавить порции</button>-->
+<!--            </div>-->
+<!--        </div>-->
         <div>
             <button th:formaction="${product != null ? '/product/edit/' + product.getId() : '/product/add'}"
                     th:style="${product != null ? '' : 'width: 50vw'}"
-                    type="submit" class="button button-main">Сохранить продукт
+                    type="submit" class="button button-main">Продолжить
             </button>
             <button th:formaction="'/product/del/' + ${product.getId()}"
                     th:if="${product != null}"

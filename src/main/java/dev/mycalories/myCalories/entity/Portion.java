@@ -17,7 +17,7 @@ public class Portion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NonNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Product product;
     @NonNull
     String name;
