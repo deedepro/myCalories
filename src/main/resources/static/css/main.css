@@ -8,5 +8,64 @@
 html, body {
     font-family: system-ui, -apple-system, "Helvetica", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     height: 100%;
-    min-height: 350px;
+    overflow: clip;
+    font-size: 2.5vh;
+    display: flex;
+    justify-content: center;
 }
+
+.mobile-view {
+    width: 50vh;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+p {
+    margin: 0;
+}
+
+.full-form {
+    width: 100%;
+    height: 100%;
+}
+
+/*Общие блоки*/
+
+.back-block {
+    width: 100%;
+    height: 5vh;
+}
+
+/* Button */
+
+.back-button {
+    width: 25%;
+    height: 4vh;
+    margin: 0.5vh;
+    font-size: 2vh;
+}
+
+.red-button {
+    color: white;
+    background: linear-gradient(red, darkred);
+    border: 0.1vh solid black;
+}
+
+.green-button {
+    color: white;
+    background: linear-gradient(greenyellow, green);
+    border: 0.1vh solid black;
+}
+
+/* Text */
+.p_maxi {
+    font-size: 4vh;
+}
+
+.p_mini {
+    color: gray;
+    font-size: 2vh;
+}
+
+
