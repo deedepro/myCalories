@@ -70,7 +70,8 @@ public class RecipesController {
     }
 
     @GetMapping("/recipes/edit")
-    String showEditRecipesPage(Model model, @RequestParam(value = "recipe_id") long recipeId) {
+    String showEditRecipesPage(Model model,
+                               @RequestParam(value = "recipe_id") long recipeId) {
         Recipe recipe = recipeService.findRecipe(recipeId);
         model.addAttribute("recipe", recipe);
         return "recipe";

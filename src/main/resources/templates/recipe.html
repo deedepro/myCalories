@@ -1,104 +1,108 @@
 <!DOCTYPE html>
 <html lang="ru">
 <style>
-    html, body {
-        height: 100%;
-        overflow: clip;
-    }
-
-    .back {
-        margin: 10px;
-        height: 40px;
-        width: 100px;
-        font-size: 20px;
-        background: #FFFFFF;
-        border: 1px solid black;
-    }
-
-    .wrapper {
-        height: calc(100% - 60px);
+    .form-block {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
+        flex-direction: column;
+        flex-wrap: nowrap;
     }
 
-    .content {
-        height: 300px;
-        width: 600px;
+    .parameters-block {
+        width: 100%;
+        height: 65vh;
+        padding-left: 5%;
+        padding-right: 5%;
         display: flex;
         flex-direction: column;
     }
 
-    .content div {
+    .parameter-block {
+        width: 100%;
+        height: 10vh;
+        display: flex;
+        align-content: center;
+    }
+
+    .with-label {
+        justify-content: space-between;
+    }
+
+    .without-label input {
+        width: 100%;
+    }
+
+    .button-block {
+        width: 100%;
+        height: 10vh;
+    }
+
+    .continue-button {
+        width: calc(100% - 1vh);
+        height: 9vh;
+        margin: 0.5vh;
+        font-size: 3vh;
+        border-radius: 3vh;
+    }
+
+    input, select {
+        text-align: center;
+        font-size: 2.5vh;
+        border: 0.1vh solid black;
+        height: 8vh;
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+        border-radius: 2.5vh;
+        width: 50%;
+    }
+
+    label {
         display: flex;
         align-items: center;
-        height: 50px;
-        margin-bottom: 10px;
-    }
-
-    .button {
-        height: 40px;
-        border-radius: 6px;
-        font-size: 20px;
-        cursor: pointer;
-    }
-
-    .button-go {
-        width: 600px;
-        background: linear-gradient(#72D76D, #28A020);
-        color: white;
-        border: 0;
-    }
-    .button-delete {
-        width: 10vw;
-        background: linear-gradient(red, darkred);
-        border: 0;
-        color: white;
-    }
-    label, input[type=text], input[type=number]{
-        font-size: 20px;
-        flex-basis: 50%;
-    }
-    input[type=text], input[type=number] {
-        height: 40px;
-        text-align: center;
-        border-radius: 6px;
-        border: 1px solid black;
-        cursor: pointer;
     }
 </style>
 <head>
     <meta charset="UTF-8">
     <title>Создание рецепта</title>
+    <link type="text/css" rel="stylesheet" href="/css/main.css"/>
 </head>
 <body>
-<form action="/recipes" method="get">
-    <input type="submit" value="Назад" class="back">
-</form>
-<div class="wrapper">
-    <form method="post" class="content">
-        <input type="hidden" name="recipe_id" th:value="${recipe?.getId()}">
-        <div>
-            <label for="name">Название рецепта</label>
-            <input type="text" name="name" id="name" required th:value="${recipe?.getName()}">
-        </div>
-        <div>
-            <label for="weight">Вес в готовом виде</label>
-            <input type="number" name="weight" id="weight" th:value="${recipe?.getWeight()}">
-        </div>
-        <div>
-            <button th:formaction="${recipe != null ? '/recipes/edit' : '/recipes/create'}"
-                    th:style="${recipe != null ? '' : 'width: 50vw'}"
-                    type="submit" class="button button-go">Далее
-            </button>
-            <button th:if="${recipe != null}"
-                    formaction="/recipes/del"
-                    type="submit" class="button button-delete"
-                    th:text="Удалить">
-            </button>
-        </div>
-    </form>
+<div class="mobile-view">
+    <div class="back-block">
+        <form action="/recipes" method="get" class="full-form">
+            <input type="submit" value="Назад" class="back-button">
+        </form>
+    </div>
+    <div class="content-block">
+        <form method="post" class="full-form">
+            <div class="form-block">
+                <div class="parameters-block">
+                    <div class="parameter-block without-label">
+                        <label for="name"></label>
+                        <input type="text" placeholder="Название рецепта" name="name" id="name" required th:value="${recipe?.getName()}">
+                    </div>
+                    <div class="parameter-block with-label">
+                        <label for="weight">Грамм в готовом виде</label>
+                        <input type="number" name="weight" id="weight" th:value="${recipe?.getWeight()}">
+                    </div>
+                </div>
+                <div class="buttons-block">
+                    <div class="button-block">
+                        <input th:formaction="${recipe != null ? '/recipes/edit' : '/recipes/create'}"
+                               type="submit" value="Продолжить"
+                               class="continue-button green-button">
+                    </div>
+                    <div class="button-block">
+                        <th:block th:if="${recipe != null}">
+                            <input formaction="/recipes/del"
+                                   type="submit" value="Удалить"
+                                   class="continue-button red-button">
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="recipe_id" th:value="${recipe?.getId()}">
+        </form>
+    </div>
 </div>
 </body>
 </html>
