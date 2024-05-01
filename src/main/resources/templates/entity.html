@@ -109,17 +109,19 @@
                         <input required type="date" th:value="${date}" id="date" name="entityDate">
                     </div>
                 </div>
-                <div class="button-block">
-                    <input th:formaction="${entity != null ? '/diary/edit/' + entity.getId() : '/diary/add/' + product.getId()}"
-                           type="submit" th:value="${entity != null ? 'Изменить' : 'Добавить'}"
-                           class="continue-button green-button">
-                </div>
-                <div class="button-block">
-                    <th:block th:if="${entity != null}">
-                        <input th:formaction="'/diary/del/' + ${entity.getId()}"
-                               type="submit" value="Удалить"
-                               class="continue-button red-button">
-                    </th:block>
+                <div class="buttons-block">
+                    <div class="button-block">
+                        <input th:formaction="${entity != null ? '/diary/edit/' + entity.getId() : '/diary/add/' + product.getId()}"
+                               type="submit" th:value="${entity != null ? 'Изменить' : 'Добавить'}"
+                               class="continue-button green-button">
+                    </div>
+                    <div class="button-block">
+                        <th:block th:if="${entity != null}">
+                            <input th:formaction="'/diary/del/' + ${entity.getId()}"
+                                   type="submit" value="Удалить"
+                                   class="continue-button red-button">
+                        </th:block>
+                    </div>
                 </div>
             </div>
             <input type="hidden" name="date" th:value="${date}">
