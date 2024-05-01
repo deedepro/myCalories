@@ -173,7 +173,9 @@
         </div>
     </div>
     <div class="continue-block">
-        <form method="get" th:action="${'/products/' + selectedFilter + '/' + product.getId()}" class="full-form">
+        <form method="get" action="/products" class="full-form">
+            <input type="hidden" name="id" th:value="${product.getId()}">
+            <input type="hidden" name="filter" th:value="${selectedFilter}">
             <input type="submit" value="Продолжить" class="continue-button green-button">
         </form>
     </div>

@@ -38,35 +38,16 @@ public class ProductsController {
     }
 
     /**
-     * Обработчик события открытия страницы "Продукты" без параметров
-     *
-     * @param model параметры страницы
-     * @return открытие страницы "Продукты"
-     */
-    @GetMapping("/products")
-    String showProductsPage(Model model) {
-        return showProductsPage(model, null, null);
-    }
-
-    /**
-     * Обработчик события открытия страницы "Продукты" с учетом фильтра
-     *
-     * @param model параметры страницы
-     * @return открытие страницы "Продукты"
-     */
-    @GetMapping("/products/{filter}")
-    String showProductsPage(Model model, @PathVariable(value = "filter") String filter, @RequestParam(name = "search", required = false) String search) {
-        return showProductsPage(model, filter, 0, search);
-    }
-
-    /**
      * Обработчик события открытия страницы "Продукты" с учетом фильтра и выбранного продукта
      *
      * @param model параметры страницы
      * @return открытие страницы "Продукты"
      */
-    @GetMapping("/products/{filter}/{id}")
-    String showProductsPage(Model model, @PathVariable(value = "filter") String filter, @PathVariable(value = "id") long id, String search) {
+    @GetMapping("/products")
+    String showProductsPage(Model model,
+                            @RequestParam(value = "id", required = false) Long id,
+                            @RequestParam(value = "filter", required = false) String filter,
+                            @RequestParam(name = "search", required = false) String search) {
         prepareModel(model, filter, id, search);
         return "products";
     }
@@ -100,7 +81,7 @@ public class ProductsController {
         return "product";
     }
 
-    void prepareModel(Model model, String filter, long id, String search) {
+    void prepareModel(Model model, String filter, Long id, String search) {
         if(filter == null) filter = "all";
         model.addAttribute("filter", filter);
         List<ProductView> products = Collections.emptyList();
@@ -125,7 +106,7 @@ public class ProductsController {
 
         model.addAttribute("products", products);
         ProductView selectedProductView;
-        if (id != 0) {
+        if (id != null) {
             selectedProductView = products.stream().filter(product -> product.getId().equals(id)).findAny().orElse(null);
         } else {
             selectedProductView = products.stream().findFirst().orElse(null);

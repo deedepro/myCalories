@@ -212,22 +212,33 @@
     <div class="double-screen">
         <div class="list-block">
             <div class="filter-div">
-                <form method="get" class="filter-form">
-                    <button th:classappend="${filter.equals('all') ? 'selected' : ''}" formaction="/products/all">Все</button>
-                    <button th:classappend="${filter.equals('my') ? 'selected' : ''}" formaction="/products/my">Мои</button>
-                    <button th:classappend="${filter.equals('favorites') ? 'selected' : ''}" formaction="/products/favorites" disabled>Избранные</button>
-                </form>
+                <div class="filter-form">
+                    <form method="get" action="/products" class="filter-form">
+                        <input type="hidden" name="filter" value="all">
+                        <button th:classappend="${filter.equals('my') ? 'selected' : ''}">Все</button>
+                    </form>
+                    <form method="get" action="/products" class="filter-form">
+                        <input type="hidden" name="filter" value="my">
+                        <button th:classappend="${filter.equals('my') ? 'selected' : ''}">Мои</button>
+                    </form>
+                    <form method="get" action="/products" class="filter-form">
+                        <input type="hidden" name="filter" value="favorites">
+                        <button th:classappend="${filter.equals('favorites') ? 'selected' : ''}" disabled>Избранные</button>
+                    </form>
+                </div>
             </div>
             <div class="table-view product-table">
                 <div class="product-table-row-div">
-                    <form class="search-form" th:action="'/products/' + ${filter}" method="get">
+                    <form class="search-form" action="/products" method="get">
                         <label for="search"></label>
                         <input class="search-input" type="text" placeholder="Поиск ..." id="search" name="search" th:value="${search}">
-<!--                        <button class="search-button" type="submit">Поиск</button>-->
+                        <input type="hidden" name="filter" th:value="${filter}">
                     </form>
                 </div>
                 <th:block th:each="product : ${products}">
-                    <form th:action="'/products/' + ${filter} + '/' + ${product.getId()}" method="get">
+                    <form action="/products" method="get">
+                        <input type="hidden" name="id" th:value="${product.getId()}">
+                        <input type="hidden" name="filter" th:value="${filter}">
                         <input type="hidden" name="search" th:value="${search}">
                         <div class="product-table-row-div" th:classappend="${product.getId() == selectedProduct.getId() ? 'selected' : ''}">
                             <button class="product-button">
