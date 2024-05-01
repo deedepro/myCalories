@@ -5,6 +5,7 @@ import dev.mycalories.myCalories.dto.ProductView;
 import dev.mycalories.myCalories.dto.RecipeView;
 import dev.mycalories.myCalories.entity.EnergyValue;
 import dev.mycalories.myCalories.entity.Ingredient;
+import dev.mycalories.myCalories.entity.Product;
 import dev.mycalories.myCalories.entity.Recipe;
 import dev.mycalories.myCalories.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,9 +138,9 @@ public class RecipesController {
                                       @PathVariable(value = "product_id") Long productId,
                                       @RequestParam(value = "recipe_id", required = false) Long recipeId) {
         model.addAttribute("recipeId", recipeId);
-        ProductView product = productsService.createProductView(productsService.findProduct(productId));
-        model.addAttribute("product", product);
-        return "addIngredientParams";
+        ProductView productView = productsService.createProductView(productsService.findProduct(productId));
+        model.addAttribute("product", productView);
+        return "ingredient";
     }
 
     @GetMapping("/recipes/ingredient/edit")
@@ -147,9 +148,14 @@ public class RecipesController {
                                        @RequestParam(value = "ingredient_id") Long ingredientId,
                                        @RequestParam(value = "recipe_id", required = false) Long recipeId) {
         model.addAttribute("recipeId", recipeId);
+
         Ingredient ingredient = ingredientService.fetch(ingredientId);
         IngredientView ingredientView = ingredientService.createIngredientView(ingredient);
         model.addAttribute("ingredient", ingredientView);
+
+        Product product = ingredient.getProduct();
+        ProductView productView = productsService.createProductView(product);
+        model.addAttribute("product", productView);
         return "ingredient";
     }
 
