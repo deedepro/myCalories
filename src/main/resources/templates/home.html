@@ -1,97 +1,65 @@
 <!DOCTYPE html>
 <html lang="ru">
 <style>
-    html, body {
-        height: 100%;
-        overflow: clip;
-    }
-
-    .wrapper {
-        height: 100%;
+    .button-block {
         width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        height: 10vh;
     }
 
-    .button {
-        border-radius: 20px;
-        border: 1px solid black;
-        background: white;
-        font-size: 20px;
-        margin: 20px;
-        cursor: pointer;
+    .continue-button {
+        width: calc(100% - 1vh);
+        height: 9vh;
+        margin: 0.5vh;
+        font-size: 3vh;
+        border-radius: 3vh;
     }
 
-    .diary {
-        background: linear-gradient(#D5E8D4, #97D077);
-        border: 0;
-        width: 600px;
-        height: 300px;
-    }
-
-    .recipes {
-        width: 350px;
-        height: 200px;
-    }
-
-    .products {
-        width: 300px;
-        height: 200px;
-    }
-
-    .settings {
-        width: 400px;
-        height: 300px;
-    }
-    .logout{
-        border-radius: 15px;
-        width: 260px;
-        height: 50px;
-    }
-    .right{
-        margin-top: 110px;
-    }
-    .avatar{
-        height: 90px;
-        border-radius: 100px;
+    input {
+        text-align: center;
+        font-size: 2.5vh;
+        border: 0.1vh solid black;
+        height: 8vh;
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+        border-radius: 2.5vh;
     }
 </style>
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Меню</title>
+    <link type="text/css" rel="stylesheet" href="/css/main.css"/>
 </head>
 <body>
-<div class="wrapper">
-    <div class="left">
-        <form action="/calendar" method="get">
-            <button class="button diary">
-                Дневник
-            </button>
-        </form>
-        <form action="/products" method="get" style="float: right">
-            <button class="button products">
-                Продукты
-            </button>
-        </form>
-    </div>
-    <div class="right">
-        <form action="/logout" method="get" style="display: flex">
-            <img src="/img/avatar.png" alt="Аватар" class="avatar">
-            <button class="button logout">
-                Выход
-            </button>
-        </form>
-        <form action="/recipes" method="get">
-            <button class="button recipes">
-                Рецепты
-            </button>
-        </form>
-        <form action="/settings" method="get">
-            <button class="button settings">
-                Настройки
-            </button>
-        </form>
+<div class="mobile-view">
+    <div class="back-block"></div>
+    <div class="content-block">
+        <div class="buttons-block">
+            <div class="button-block">
+                <form action="/calendar" method="get">
+                    <input type="submit" class="continue-button green-button" value="Дневник">
+                </form>
+            </div>
+            <div class="button-block">
+                <form action="/products" method="get">
+                    <input type="submit" class="continue-button" value="Продукты">
+                </form>
+            </div>
+            <div class="button-block">
+                <form action="/recipes" method="get">
+                    <input type="submit" class="continue-button" value="Рецепты">
+                </form>
+            </div>
+            <div class="button-block">
+                <form action="/settings" method="get">
+                    <input type="submit" class="continue-button" value="Настройки">
+                </form>
+            </div>
+            <div class="button-block">
+                <form action="/logout" method="get">
+                    <input type="submit" class="continue-button red-button" value="Выход">
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 </body>
