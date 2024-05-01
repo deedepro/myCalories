@@ -8,4 +8,6 @@ public interface UserService {
     User getCurrentUser();
 
     boolean isAuthentication();
+
+    boolean isUsernameExist(String username);
 }

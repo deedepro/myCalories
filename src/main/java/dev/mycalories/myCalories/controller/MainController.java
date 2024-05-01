@@ -1,5 +1,6 @@
 package dev.mycalories.myCalories.controller;
 
+import dev.mycalories.myCalories.entity.User;
 import dev.mycalories.myCalories.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,10 +19,9 @@ public class MainController {
 
     @GetMapping("/")
     String showCorePage(Model model) {
-        if (userService.isAuthentication()){
+        if (userService.isAuthentication()) {
             return "home";
-        }
-        else {
+        } else {
             return "hello";
         }
     }
@@ -43,7 +43,21 @@ public class MainController {
 
     @GetMapping("/settings")
     String showSettingsPage(Model model) {
+        User currentUser = userService.getCurrentUser();
+        model.addAttribute("user", currentUser);
         return "settings";
+    }
+
+    @PostMapping("settings/save")
+    String changeSettings(Model model,
+                          @RequestParam(value = "username") String username,
+                          @RequestParam(value = "email") String email) {
+        if (userService.isUsernameExist(username)) {
+            model.addAttribute("error", "error");
+        } else {
+            userService.getCurrentUser().setUsername(username);
+        }
+        return "redirect:/settings";
     }
 
     @GetMapping("/settings/pass")
@@ -59,12 +73,12 @@ public class MainController {
                     @RequestParam String passwordCheck,
                     Model model) {
         String errorMessage;
-        if(password.equals(passwordCheck)){
+        if (password.equals(passwordCheck)) {
             errorMessage = userService.createUser(username, password);
         } else {
             errorMessage = "Введенные пароли не совпадают";
         }
-        if(errorMessage != null){
+        if (errorMessage != null) {
             model.addAttribute("message", errorMessage);
             return null;
         } else {

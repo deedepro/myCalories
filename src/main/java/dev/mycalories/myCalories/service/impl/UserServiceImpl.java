@@ -26,9 +26,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String createUser(@RequestParam() String username, String password) {
-        if (usersRepository.existsByUsername(username)) {
+        if (isUsernameExist(username)) {
             return "user with current username exist";
         } else {
+            //TODO: withDefaultPasswordEncoder is deprecated
             UserDetails user = org.springframework.security.core.userdetails.User.withDefaultPasswordEncoder()
                     .username(username)
                     .password(password)
@@ -58,6 +59,11 @@ public class UserServiceImpl implements UserService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean isUsernameExist(String username) {
+        return usersRepository.existsByUsername(username);
     }
 
 
